@@ -1,9 +1,16 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "module": "commonjs",
-        "moduleResolution": "Node",
-        "sourceMap": true,
-        "outDir": "../tests-out"
-    }
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "sourceMap": true,
+    "outDir": "../tests-out",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node", "@playwright/test"]
+  },
+  "include": ["tests/**/*.ts"],
+  "exclude": ["node_modules"]
 }
