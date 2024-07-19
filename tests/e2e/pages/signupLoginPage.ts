@@ -18,8 +18,15 @@ export class SignupLoginPage {
         this.signForm = this.form.filter({ hasText: 'Signup' })
         this.loginForm = this.form.filter({ hasText: 'Login' })
         this.nameInput = this.signForm.getByPlaceholder('Name')
-        this.signupEmailAddressInput = this.signForm.getByPlaceholder('Email Address')
-        this.loginEmailAddressInput = this.loginForm.getByPlaceholder('Email Address')
-        this.signUpButton = this.signForm.getByRole('button', { name: 'Signup' })
+
+        this.signupEmailAddressInput =
+            this.signForm.getByPlaceholder('Email Address')
+
+        this.loginEmailAddressInput =
+            this.loginForm.getByPlaceholder('Email Address')
+
+        this.signUpButton = this.signForm.getByRole('button', {
+            name: 'Signup',
+        })
     }
 }

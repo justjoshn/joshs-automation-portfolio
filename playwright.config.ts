@@ -30,6 +30,7 @@ export default defineConfig({
         headless: true,
         ignoreHTTPSErrors: true,
         video: 'on-first-retry',
+        testIdAttribute: 'data-qa',
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
