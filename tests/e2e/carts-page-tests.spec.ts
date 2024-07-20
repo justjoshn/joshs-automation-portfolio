@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
   await shopMenu.cartLink.click()
 })
 
-test.only('Verify Subscription in cart page', async ({ page }) => {
+test('Verify Subscription in cart page', async ({ page }) => {
   const subscriptionWidget = new SubscriptionWidget(page)
   const randomEmail = faker.internet.email()
 
