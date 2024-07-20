@@ -26,11 +26,11 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'https://www.automationexercise.com',
-    viewport: { width: 1920, height: 1080 },
     headless: true,
     ignoreHTTPSErrors: true,
     video: 'on-first-retry',
     testIdAttribute: 'data-qa',
+    viewport: { width: 1920, height: 1080 },
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -40,17 +40,17 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 } },
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'], viewport: { width: 1920, height: 1080 } },
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Safari'], viewport: { width: 1920, height: 1080 } },
     },
 
     /* Test against mobile viewports. */

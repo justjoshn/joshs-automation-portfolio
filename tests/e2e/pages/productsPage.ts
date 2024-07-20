@@ -8,10 +8,15 @@ export class ProductsPage {
   readonly productPrice: Locator
   readonly productName: Locator
   readonly viewProductLink: Locator
-  readonly addToCartLink: Locator
+  readonly productAddToCartLink: Locator
   readonly searchInput: Locator
   readonly submitSearchButton: Locator
   readonly searchedProductsHeader: Locator
+  readonly productAddedModal: Locator
+  readonly continueShoppingButton: Locator
+  readonly viewCartLink: Locator
+  readonly productOverlays: Locator
+  readonly overlayAddToCartLink: Locator
 
   constructor(page: Page) {
     this.page = page
@@ -21,9 +26,18 @@ export class ProductsPage {
     this.productInfo = this.productImageWrapper.locator('.productinfo')
     this.productPrice = this.productInfo.getByRole('heading')
     this.productName = this.productInfo.locator('p')
-    this.addToCartLink = this.productInfo.getByRole('link', { name: /add to cart/i })
+    this.productAddToCartLink = this.productInfo.locator('.btn')
     this.searchInput = page.getByPlaceholder('Search Product')
     this.submitSearchButton = page.getByRole('button', { name: '' })
     this.searchedProductsHeader = page.getByRole('heading', { name: /searched products/i })
+    this.productAddedModal = page.locator('.modal-content')
+
+    this.continueShoppingButton = this.productAddedModal.getByRole('button', {
+      name: /continue shopping/i,
+    })
+
+    this.viewCartLink = this.productAddedModal.getByRole('link', { name: /view cart/i })
+    this.productOverlays = page.locator('.product-overlay')
+    this.overlayAddToCartLink = this.productOverlays.locator('.btn')
   }
 }
