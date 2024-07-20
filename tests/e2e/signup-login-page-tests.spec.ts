@@ -1,17 +1,24 @@
 import { test, expect } from '@playwright/test'
 import { HomePage } from './pages/homePage'
-import { HeaderPage } from './pages/headerPage'
+import { ShopMenu } from './pages/shopMenu'
 import { SignupLoginPage } from './pages/signupLoginPage'
 import { AccountInfoPage } from './pages/accountInfoPage'
+import { ContactUsPage } from './pages/contactUsPage'
 import { faker } from '@faker-js/faker'
 
+const emailAddress = 'josh@josh.com'
+const password = 'josh'
+const name = 'josh'
+
 test.beforeEach(async ({ page }) => {
+  const homePage = new HomePage(page)
+
   await page.goto('/')
+  await expect(homePage.productImage.first()).toBeVisible()
 })
 
-test('Register User', async ({ page }) => {
-  const homePage = new HomePage(page)
-  const headerPage = new HeaderPage(page)
+test('Register User and Delete Account', async ({ page }) => {
+  const shopMenu = new ShopMenu(page)
   const signUpLoginPage = new SignupLoginPage(page)
   const accountInfoPage = new AccountInfoPage(page)
   const randomName = faker.person.firstName()
@@ -50,9 +57,8 @@ test('Register User', async ({ page }) => {
   const randomPhoneNumber = faker.phone.number()
   const continueButton = page.getByRole('link', { name: /continue/i })
 
-  await homePage.productImage.first().waitFor()
-  await headerPage.signupLoginLink.click()
-  await expect(page.getByText('New User Signup!')).toBeVisible()
+  await shopMenu.signupLoginLink.click()
+  await expect(signUpLoginPage.newUserSignUpHeader).toBeVisible()
   await signUpLoginPage.nameInput.fill(randomName)
   await signUpLoginPage.signupEmailAddressInput.fill(randomEmail)
   await signUpLoginPage.signUpButton.click()
@@ -80,7 +86,74 @@ test('Register User', async ({ page }) => {
   await expect(page.getByText('ACCOUNT CREATED!')).toBeVisible()
   await continueButton.click()
   await expect(page.getByText(`Logged in as ${randomName}`)).toBeVisible()
-  await headerPage.deleteAccountLink.click()
+  await shopMenu.deleteAccountLink.click()
   await expect(page.getByText('ACCOUNT DELETED!')).toBeVisible()
   await continueButton.click()
+})
+
+test('Login User with correct email and password and Logout', async ({ page }) => {
+  const shopMenu = new ShopMenu(page)
+  const signUpLoginPage = new SignupLoginPage(page)
+
+  await shopMenu.signupLoginLink.click()
+  await expect(signUpLoginPage.logiinToYourAccountHeader).toBeVisible()
+  await signUpLoginPage.loginEmailAddressInput.fill(emailAddress)
+  await signUpLoginPage.password.fill(password)
+  await signUpLoginPage.loginButton.click()
+  await expect(page.getByText(`Logged in as ${name}`)).toBeVisible()
+  await shopMenu.logoutLink.click()
+  await expect(signUpLoginPage.loginForm).toBeVisible()
+})
+
+test('Login User with incorrect email and password', async ({ page }) => {
+  const shopMenu = new ShopMenu(page)
+  const signUpLoginPage = new SignupLoginPage(page)
+  const randomEmail = faker.internet.email()
+  const randomPassword = faker.internet.password()
+
+  await shopMenu.signupLoginLink.click()
+  await expect(signUpLoginPage.logiinToYourAccountHeader).toBeVisible()
+  await signUpLoginPage.loginEmailAddressInput.fill(randomEmail)
+  await signUpLoginPage.password.fill(randomPassword)
+  await signUpLoginPage.loginButton.click()
+  await expect(page.getByText('Your email or password is incorrect!')).toBeVisible()
+})
+
+test('Register User with existing email', async ({ page }) => {
+  const shopMenu = new ShopMenu(page)
+  const signUpLoginPage = new SignupLoginPage(page)
+
+  await shopMenu.signupLoginLink.click()
+  await expect(signUpLoginPage.newUserSignUpHeader).toBeVisible()
+  await signUpLoginPage.signupEmailAddressInput.fill(emailAddress)
+  await signUpLoginPage.nameInput.fill(name)
+  await signUpLoginPage.signUpButton.click()
+  await expect(page.getByText('Email Address already exist!')).toBeVisible()
+})
+
+// TODO: Figure out issue with uploading file
+test.fixme('Contact Us Form', async ({ page }) => {
+  const homePage = new HomePage(page)
+  const shopMenu = new ShopMenu(page)
+  const contactUsPage = new ContactUsPage(page)
+  const randomName = faker.person.firstName()
+  const randomEmail = faker.internet.email()
+  const randomSubject = faker.lorem.words()
+  const randomParagraph = faker.lorem.paragraph()
+
+  await shopMenu.contactUsLink.click()
+  await expect(page.getByText('GET IN TOUCH')).toBeVisible()
+  await contactUsPage.nameInput.fill(randomName)
+  await contactUsPage.emailInput.fill(randomEmail)
+  await contactUsPage.subjectInput.fill(randomSubject)
+  await contactUsPage.textArea.fill(randomParagraph)
+  await contactUsPage.uploadFile()
+  await contactUsPage.submitButton.click()
+
+  await expect(
+    page.getByText('Success! Your details have been submitted successfully.')
+  ).toBeVisible()
+
+  await shopMenu.homeLink.click()
+  await homePage.productImage.first().waitFor()
 })
