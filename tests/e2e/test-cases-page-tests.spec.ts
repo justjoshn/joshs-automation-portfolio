@@ -16,5 +16,10 @@ test('Verify Test Cases Page', async ({ page }) => {
 
   await shopMenu.testCasesLink.click()
   await expect(testCasesPage.testCasesHeader).toBeVisible()
-  await expect(testCasesPage.panelGroup.first()).toBeVisible()
+
+  const panelGroups = await testCasesPage.panelGroup.all()
+
+  for (const panelGroup of panelGroups) {
+    await expect(panelGroup).toBeVisible()
+  }
 })

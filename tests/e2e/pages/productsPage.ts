@@ -9,6 +9,9 @@ export class ProductsPage {
   readonly productName: Locator
   readonly viewProductLink: Locator
   readonly addToCartLink: Locator
+  readonly searchInput: Locator
+  readonly submitSearchButton: Locator
+  readonly searchedProductsHeader: Locator
 
   constructor(page: Page) {
     this.page = page
@@ -19,5 +22,8 @@ export class ProductsPage {
     this.productPrice = this.productInfo.getByRole('heading')
     this.productName = this.productInfo.locator('p')
     this.addToCartLink = this.productInfo.getByRole('link', { name: /add to cart/i })
+    this.searchInput = page.getByPlaceholder('Search Product')
+    this.submitSearchButton = page.getByRole('button', { name: '' })
+    this.searchedProductsHeader = page.getByRole('heading', { name: /searched products/i })
   }
 }
