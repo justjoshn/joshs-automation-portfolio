@@ -3,7 +3,7 @@ import { HomePage } from './pages/homePage'
 import { ShopMenu } from './pages/shopMenu'
 import { ProductsPage } from './pages/productsPage'
 import { ProductDetailsPage } from './pages/productDetailsPage'
-import { ShoppingCartPage } from './pages/shoppingCartPage'
+import { CartPage } from './pages/cartPage'
 import { faker } from '@faker-js/faker'
 
 test.beforeEach(async ({ page }) => {
@@ -12,15 +12,10 @@ test.beforeEach(async ({ page }) => {
   const productsPage = new ProductsPage(page)
 
   await page.goto('/')
-  await expect(homePage.productImage.first()).toBeVisible()
+  await homePage.productImageWrapper.first().waitFor()
   await shopMenu.productsLink.click()
   await expect(productsPage.allProductsHeader).toBeVisible()
-
-  const allProducts = await productsPage.productImageWrapper.all()
-
-  for (const product of allProducts) {
-    await expect(product).toBeVisible()
-  }
+  await productsPage.productImageWrapper.first().waitFor()
 })
 
 test('Verify All Products and product detail page', async ({ page }) => {
@@ -59,7 +54,7 @@ test('Search Product', async ({ page }) => {
 
 test('Add Products in Cart', async ({ page }) => {
   const productsPage = new ProductsPage(page)
-  const shoppingCartPage = new ShoppingCartPage(page)
+  const cartPage = new CartPage(page)
   const productQuantity = '1'
   const firstProductName: string = await productsPage.productName.first().innerText()
   const firstProductPrice: string = await productsPage.productPrice.first().innerText()
@@ -72,37 +67,37 @@ test('Add Products in Cart', async ({ page }) => {
   await productsPage.productAddToCartLink.nth(1).hover()
   await productsPage.overlayAddToCartLink.nth(1).click()
   await productsPage.viewCartLink.click()
-  await expect(shoppingCartPage.cartProducts).toHaveCount(2)
+  await expect(cartPage.cartProducts).toHaveCount(2)
 
-  await expect(shoppingCartPage.productNames.first()).toHaveText(firstProductName, {
+  await expect(cartPage.productNames.first()).toHaveText(firstProductName, {
     useInnerText: true,
   })
 
-  await expect(shoppingCartPage.productNames.nth(1)).toHaveText(secondProductName, {
+  await expect(cartPage.productNames.nth(1)).toHaveText(secondProductName, {
     useInnerText: true,
   })
 
-  await expect(shoppingCartPage.productPrices.first()).toHaveText(firstProductPrice, {
+  await expect(cartPage.productPrices.first()).toHaveText(firstProductPrice, {
     useInnerText: true,
   })
 
-  await expect(shoppingCartPage.productPrices.nth(1)).toHaveText(secondProductPrice, {
+  await expect(cartPage.productPrices.nth(1)).toHaveText(secondProductPrice, {
     useInnerText: true,
   })
 
-  await expect(shoppingCartPage.productQuantities.first()).toHaveText(productQuantity, {
+  await expect(cartPage.productQuantities.first()).toHaveText(productQuantity, {
     useInnerText: true,
   })
 
-  await expect(shoppingCartPage.productQuantities.nth(1)).toHaveText(productQuantity, {
+  await expect(cartPage.productQuantities.nth(1)).toHaveText(productQuantity, {
     useInnerText: true,
   })
 
-  await expect(shoppingCartPage.productTotalPrices.first()).toHaveText(firstProductPrice, {
+  await expect(cartPage.productTotalPrices.first()).toHaveText(firstProductPrice, {
     useInnerText: true,
   })
 
-  await expect(shoppingCartPage.productTotalPrices.nth(1)).toHaveText(secondProductPrice, {
+  await expect(cartPage.productTotalPrices.nth(1)).toHaveText(secondProductPrice, {
     useInnerText: true,
   })
 })

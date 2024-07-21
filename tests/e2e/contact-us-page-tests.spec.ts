@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
   const shopMenu = new ShopMenu(page)
 
   await page.goto('/')
-  await expect(homePage.productImage.first()).toBeVisible()
+  await homePage.productImageWrapper.first().waitFor()
   await shopMenu.contactUsLink.click()
 })
 
@@ -37,5 +37,11 @@ test.fixme('Contact Us Form', async ({ page }) => {
   ).toBeVisible()
 
   await shopMenu.homeLink.click()
-  await homePage.productImage.first().waitFor()
+
+  const allProducts = await homePage.productImageWrapper.all()
+
+  for (const product of allProducts) {
+    await product.scrollIntoViewIfNeeded()
+    await expect(product).toBeVisible()
+  }
 })

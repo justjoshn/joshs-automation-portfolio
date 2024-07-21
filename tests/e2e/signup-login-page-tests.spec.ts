@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
   const shopMenu = new ShopMenu(page)
 
   await page.goto('/')
-  await expect(homePage.productImage.first()).toBeVisible()
+  await homePage.productImageWrapper.first().waitFor()
   await shopMenu.signupLoginLink.click()
 })
 

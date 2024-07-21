@@ -9,6 +9,11 @@ export class ProductDetailsPage {
   readonly productAvailability: Locator
   readonly productCondition: Locator
   readonly productBrand: Locator
+  readonly quantityInput: Locator
+  readonly addToCartButton: Locator
+  readonly productAddedModal: Locator
+  readonly continueShoppingButton: Locator
+  readonly viewCartLink: Locator
 
   constructor(page: Page) {
     this.page = page
@@ -19,5 +24,14 @@ export class ProductDetailsPage {
     this.productAvailability = this.productInformation.locator('p', { hasText: 'Availability:' })
     this.productCondition = this.productInformation.locator('p', { hasText: 'Condition:' })
     this.productBrand = this.productInformation.locator('p', { hasText: 'Brand:' })
+    this.quantityInput = this.productInformation.locator('#quantity')
+    this.addToCartButton = this.productInformation.getByRole('button', { name: /add to cart/i })
+    this.productAddedModal = page.locator('.modal-content')
+
+    this.continueShoppingButton = this.productAddedModal.getByRole('button', {
+      name: /continue shopping/i,
+    })
+
+    this.viewCartLink = this.productAddedModal.getByRole('link', { name: /view cart/i })
   }
 }
