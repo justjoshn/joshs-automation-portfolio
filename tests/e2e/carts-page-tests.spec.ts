@@ -10,6 +10,7 @@ test.beforeEach(async ({ page }) => {
 
   await page.goto('/')
   await expect(homePage.productImage.first()).toBeVisible()
+  
   await shopMenu.cartLink.click()
 })
 
