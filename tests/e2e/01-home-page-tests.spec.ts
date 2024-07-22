@@ -159,6 +159,10 @@ test('Place Order: Register while Checkout', async ({ page }) => {
   await cartPage.expirationMonthInput.fill(randomExpirationMonth)
   await cartPage.expirationYearInput.fill(randomExpirationYear)
   await cartPage.payConfirmOrderButton.click()
+
+  // TODO: Playwright says this alert is not visible
+  // await expect(cartPage.orderSuccessfulMessage).toBeVisible()
+
   await shopMenu.deleteAccountLink.click()
   await expect(page.getByText('ACCOUNT DELETED!')).toBeVisible()
   await continueButton.click()

@@ -110,6 +110,6 @@ export class CartPage {
       name: /pay and confirm order/i,
     })
 
-    this.orderSuccessfulMessage = page.getByText('Your order has been placed successfully!')
+    this.orderSuccessfulMessage = page.getByText(/your order has been placed successfully/i)
   }
 }
