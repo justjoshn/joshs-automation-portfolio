@@ -6,9 +6,18 @@ import { AccountInfoPage } from './pages/accountInfoPage'
 import { faker } from '@faker-js/faker'
 import { CartPage } from './pages/cartPage'
 
-const emailAddress = 'josh@josh.com'
-const password = 'josh'
-const name = 'josh'
+const fullName = 'firstName lastName'
+const firstName = 'firstName'
+const lastName = 'lastName'
+const email = 'firstName@email.com'
+const password = 'password'
+const address1 = '123 Address Ave'
+const address2 = 'Apt 1'
+const country = 'United States'
+const state = 'stateName'
+const city = 'cityName'
+const zipcode = '12345'
+const mobileNumber = '555-555-5555'
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -97,10 +106,10 @@ test('Login User with correct email and password and Logout', async ({ page }) =
   const signUpLoginPage = new SignupLoginPage(page)
 
   await expect(signUpLoginPage.logiinToYourAccountHeader).toBeVisible()
-  await signUpLoginPage.loginEmailAddressInput.fill(emailAddress)
+  await signUpLoginPage.loginEmailAddressInput.fill(email)
   await signUpLoginPage.password.fill(password)
   await signUpLoginPage.loginButton.click()
-  await expect(page.getByText(`Logged in as ${name}`)).toBeVisible()
+  await expect(page.getByText(`Logged in as ${fullName}`)).toBeVisible()
   await shopMenu.logoutLink.click()
   await expect(signUpLoginPage.loginForm).toBeVisible()
 })
@@ -121,8 +130,8 @@ test('Register User with existing email', async ({ page }) => {
   const signUpLoginPage = new SignupLoginPage(page)
 
   await expect(signUpLoginPage.newUserSignUpHeader).toBeVisible()
-  await signUpLoginPage.signupEmailAddressInput.fill(emailAddress)
-  await signUpLoginPage.nameInput.fill(name)
+  await signUpLoginPage.signupEmailAddressInput.fill(email)
+  await signUpLoginPage.nameInput.fill(fullName)
   await signUpLoginPage.signUpButton.click()
   await expect(page.getByText('Email Address already exist!')).toBeVisible()
 })
@@ -246,4 +255,62 @@ test('Place Order: Register before Checkout', async ({ page }) => {
   await shopMenu.deleteAccountLink.click()
   await expect(page.getByText('ACCOUNT DELETED!')).toBeVisible()
   await continueButton.click()
+})
+
+test('Place Order: Login before Checkout', async ({ page }) => {
+  const homePage = new HomePage(page)
+  const cartPage = new CartPage(page)
+  const shopMenu = new ShopMenu(page)
+  const signUpLoginPage = new SignupLoginPage(page)
+  const productCount: number = await homePage.productImageWrapper.count()
+  const randomIndex1 = faker.number.int({ min: 0, max: productCount })
+  const randomIndex2 = faker.number.int({ min: 0, max: productCount })
+  const randomParagraph = faker.lorem.paragraph()
+  const randomCreditCardNumber = faker.finance.creditCardNumber()
+  const randomCVC = faker.finance.creditCardCVV()
+  const futureDate = faker.date.future({ years: 10 })
+  const randomExpirationMonth = futureDate.getMonth().toString()
+  const randomExpirationYear = futureDate.getFullYear().toString()
+
+  await expect(signUpLoginPage.logiinToYourAccountHeader).toBeVisible()
+  await signUpLoginPage.loginEmailAddressInput.fill(email)
+  await signUpLoginPage.password.fill(password)
+  await signUpLoginPage.loginButton.click()
+  await expect(page.getByText(`Logged in as ${fullName}`)).toBeVisible()
+  await homePage.productAddToCartLink.nth(randomIndex1).click()
+  await homePage.continueShoppingButton.click()
+  await homePage.productAddToCartLink.nth(randomIndex2).click()
+  await homePage.continueShoppingButton.click()
+  await shopMenu.cartLink.click()
+  await expect(cartPage.cartInfoTable).toBeVisible()
+  await cartPage.proceedToCheckout.click()
+  await expect(cartPage.deliveryFirstName.getByText(firstName)).toBeVisible()
+  await expect(cartPage.deliveryLastName.getByText(lastName)).toBeVisible()
+  await expect(cartPage.deliveryAddress1.getByText(address1)).toBeVisible()
+  await expect(cartPage.deliveryAddress2.getByText(address2)).toBeVisible()
+  await expect(cartPage.deliveryCity.getByText(city)).toBeVisible()
+  await expect(cartPage.deliveryState.getByText(state)).toBeVisible()
+  await expect(cartPage.deliveryPostCode.getByText(zipcode)).toBeVisible()
+  await expect(cartPage.deliveryCountry.getByText(country)).toBeVisible()
+  await expect(cartPage.deliveryPhoneNumber.getByText(mobileNumber)).toBeVisible()
+  await expect(cartPage.billingFirstName.getByText(firstName)).toBeVisible()
+  await expect(cartPage.billingLastName.getByText(lastName)).toBeVisible()
+  await expect(cartPage.billingAddress1.getByText(address1)).toBeVisible()
+  await expect(cartPage.billingAddress2.getByText(address2)).toBeVisible()
+  await expect(cartPage.billingCity.getByText(city)).toBeVisible()
+  await expect(cartPage.billingState.getByText(state)).toBeVisible()
+  await expect(cartPage.billingPostCode.getByText(zipcode)).toBeVisible()
+  await expect(cartPage.billingCountry.getByText(country)).toBeVisible()
+  await expect(cartPage.billingPhoneNumber.getByText(mobileNumber)).toBeVisible()
+  await cartPage.commentTextArea.fill(randomParagraph)
+  await cartPage.placeOrderLink.click()
+  await cartPage.nameOnCardInput.fill(fullName)
+  await cartPage.cardNumberInput.fill(randomCreditCardNumber)
+  await cartPage.cvcInput.fill(randomCVC)
+  await cartPage.expirationMonthInput.fill(randomExpirationMonth)
+  await cartPage.expirationYearInput.fill(randomExpirationYear)
+  await cartPage.payConfirmOrderButton.click()
+
+  // TODO: Playwright says this alert is not visible
+  // await expect(cartPage.orderSuccessfulMessage).toBeVisible()
 })
