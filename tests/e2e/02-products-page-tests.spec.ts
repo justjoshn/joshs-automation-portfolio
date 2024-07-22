@@ -5,6 +5,8 @@ import { ProductsPage } from './pages/productsPage'
 import { ProductDetailsPage } from './pages/productDetailsPage'
 import { CartPage } from './pages/cartPage'
 import { faker } from '@faker-js/faker'
+import { LeftSidebar } from './pages/leftSidebar'
+import { extractCategoryName } from './utils/helpers'
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -100,4 +102,64 @@ test('Add Products in Cart', async ({ page }) => {
   await expect(cartPage.productTotalPrices.nth(1)).toHaveText(secondProductPrice, {
     useInnerText: true,
   })
+})
+
+test('View & Cart Brand Products', async ({ page }) => {
+  const leftSidebar = new LeftSidebar(page)
+  const productsPage = new ProductsPage(page)
+
+  const brandNameLocators = [
+    leftSidebar.poloCategory,
+    leftSidebar.hmCategory,
+    leftSidebar.madameCategory,
+    leftSidebar.mastHarborCategory,
+    leftSidebar.babyhubCategory,
+    leftSidebar.allenSollyJuniorCategory,
+    leftSidebar.kookieKidsCategory,
+    leftSidebar.bibaCategory,
+  ]
+
+  const firstRandomBrandNameLocator = faker.helpers.arrayElement(brandNameLocators)
+
+  const secondRandomBrandNameLocator = faker.helpers.arrayElement(
+    brandNameLocators.filter((brandName) => brandName !== firstRandomBrandNameLocator)
+  )
+
+  await expect(leftSidebar.brandProducts).toBeVisible()
+
+  const firstRandomBrandNameText = extractCategoryName(
+    await firstRandomBrandNameLocator.innerText()
+  )
+
+  console.log(`First: ${firstRandomBrandNameText}`)
+
+  await firstRandomBrandNameLocator.click()
+
+  await expect(
+    page.getByRole('heading', { name: `Brand - ${firstRandomBrandNameText} Products` })
+  ).toBeVisible()
+
+  const firstAllBrandProducts = await productsPage.productImageWrapper.all()
+
+  for (const firstBrandProduct of firstAllBrandProducts) {
+    await expect(firstBrandProduct).toBeVisible()
+  }
+
+  const secondRandomBrandNameText = extractCategoryName(
+    await secondRandomBrandNameLocator.innerText()
+  )
+
+  console.log(`Second: ${firstRandomBrandNameText}`)
+
+  await secondRandomBrandNameLocator.click()
+
+  await expect(
+    page.getByRole('heading', { name: `Brand - ${secondRandomBrandNameText} Products` })
+  ).toBeVisible()
+
+  const secondAllBrandProducts = await productsPage.productImageWrapper.all()
+
+  for (const secondBrandProduct of secondAllBrandProducts) {
+    await expect(secondBrandProduct).toBeVisible()
+  }
 })
