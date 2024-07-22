@@ -7,6 +7,7 @@ import { faker } from '@faker-js/faker'
 import { ShopMenu } from './pages/shopMenu'
 import { SignupLoginPage } from './pages/signupLoginPage'
 import { AccountInfoPage } from './pages/accountInfoPage'
+import { LeftSidebar } from './pages/leftSidebar'
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -191,4 +192,46 @@ test.fixme('Remove Products From Cart', async ({ page }) => {
   }
 
   await expect(cartPage.cartProducts).toBeHidden()
+})
+
+test('View Category Products', async ({ page }) => {
+  const leftSidebar = new LeftSidebar(page)
+
+  const womenSubcategoryLocators = [
+    leftSidebar.womenTopsSubcategory,
+    leftSidebar.womenDressSubcategory,
+    leftSidebar.womenSareeSubcategory,
+  ]
+
+  const menSubcategoryLocators = [
+    leftSidebar.menTshirtsSubcategory,
+    leftSidebar.menJeansSubcategory,
+  ]
+
+  const randomWomenSubcategoryIndex = faker.number.int({ min: 0, max: 2 })
+  const randomMenSubcategoryIndex = faker.number.int({ min: 0, max: 1 })
+
+  const selectedWomenSubcategoryLocator = womenSubcategoryLocators[randomWomenSubcategoryIndex]
+  const selectedMenSubcategoryLocator = menSubcategoryLocators[randomMenSubcategoryIndex]
+
+  await expect(leftSidebar.categoryProducts).toBeVisible()
+  await leftSidebar.womenCategory.click()
+
+  const randomWomenLinkText = await selectedWomenSubcategoryLocator.innerText()
+
+  await selectedWomenSubcategoryLocator.click()
+
+  await expect(
+    page.getByRole('heading', { name: `Women - ${randomWomenLinkText} Products` })
+  ).toBeVisible()
+
+  await leftSidebar.menCategory.click()
+
+  const randomMenLinkText = await selectedMenSubcategoryLocator.innerText()
+
+  await selectedMenSubcategoryLocator.click()
+
+  await expect(
+    page.getByRole('heading', { name: `Men - ${randomMenLinkText} Products` })
+  ).toBeVisible()
 })
