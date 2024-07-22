@@ -19,6 +19,9 @@ export class AccountInfoPage {
   readonly zipcodeInput: Locator
   readonly mobileNumberInput: Locator
   readonly createAccountButton: Locator
+  readonly enterAccountInfoHeader: Locator
+  readonly signUpNewsletterCheckbox: Locator
+  readonly receiveOffersCheckbox: Locator
 
   constructor(page: Page) {
     this.page = page
@@ -42,5 +45,9 @@ export class AccountInfoPage {
     this.createAccountButton = page.getByRole('button', {
       name: /create account/i,
     })
+
+    this.enterAccountInfoHeader = page.getByRole('heading', { name: /enter account information/i })
+    this.signUpNewsletterCheckbox = page.getByText('Sign up for our newsletter!')
+    this.receiveOffersCheckbox = page.getByText('Receive special offers from our partners!')
   }
 }

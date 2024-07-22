@@ -21,7 +21,7 @@ export class ProductsPage {
   constructor(page: Page) {
     this.page = page
     this.allProductsHeader = page.getByText('ALL PRODUCTS')
-    this.productImageWrapper = page.locator('.product-image-wrapper')
+    this.productImageWrapper = page.locator('.features_items .product-image-wrapper')
     this.viewProductLink = this.productImageWrapper.getByRole('link', { name: /view product/i })
     this.productInfo = this.productImageWrapper.locator('.productinfo')
     this.productPrice = this.productInfo.getByRole('heading')
