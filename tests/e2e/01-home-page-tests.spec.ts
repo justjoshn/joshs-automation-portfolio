@@ -48,11 +48,11 @@ test('Place Order: Register while Checkout', async ({ page }) => {
   const homePage = new HomePage(page)
   const cartPage = new CartPage(page)
   const shopMenu = new ShopMenu(page)
+  const signUpLoginPage = new SignupLoginPage(page)
+  const accountInfoPage = new AccountInfoPage(page)
   const productCount: number = await homePage.productImageWrapper.count()
   const randomIndex1 = faker.number.int({ min: 0, max: productCount })
   const randomIndex2 = faker.number.int({ min: 0, max: productCount })
-  const signUpLoginPage = new SignupLoginPage(page)
-  const accountInfoPage = new AccountInfoPage(page)
   const randomFullName = faker.person.fullName()
   const randomEmail = faker.internet.email()
   const randomTitle = faker.helpers.arrayElement(['Mr.', 'Mrs.'])
@@ -166,4 +166,29 @@ test('Place Order: Register while Checkout', async ({ page }) => {
   await shopMenu.deleteAccountLink.click()
   await expect(page.getByText('ACCOUNT DELETED!')).toBeVisible()
   await continueButton.click()
+})
+
+// TODO: test is unable to click the cart quantity delete link
+test.fixme('Remove Products From Cart', async ({ page }) => {
+  const homePage = new HomePage(page)
+  const cartPage = new CartPage(page)
+  const shopMenu = new ShopMenu(page)
+  const productCount: number = await homePage.productImageWrapper.count()
+  const randomIndex1 = faker.number.int({ min: 0, max: productCount })
+  const randomIndex2 = faker.number.int({ min: 0, max: productCount })
+
+  await homePage.productAddToCartLink.nth(randomIndex1).click()
+  await homePage.continueShoppingButton.click()
+  await homePage.productAddToCartLink.nth(randomIndex2).click()
+  await homePage.continueShoppingButton.click()
+  await shopMenu.cartLink.click()
+  await expect(cartPage.cartInfoTable).toBeVisible()
+
+  const cartProducts = await cartPage.cartProducts.count()
+
+  for (let i = 0; i < cartProducts; i++) {
+    await cartPage.cartQuantityDeleteLink.nth(i).click({ force: true })
+  }
+
+  await expect(cartPage.cartProducts).toBeHidden()
 })

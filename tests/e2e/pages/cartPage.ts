@@ -53,6 +53,7 @@ export class CartPage {
   readonly expirationYearInput: Locator
   readonly payConfirmOrderButton: Locator
   readonly orderSuccessfulMessage: Locator
+  readonly cartQuantityDeleteLink: Locator
 
   constructor(page: Page) {
     this.page = page
@@ -111,5 +112,6 @@ export class CartPage {
     })
 
     this.orderSuccessfulMessage = page.getByText(/your order has been placed successfully/i)
+    this.cartQuantityDeleteLink = this.cartInfoTable.locator('.cart_quantity_delete')
   }
 }
