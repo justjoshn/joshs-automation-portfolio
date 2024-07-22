@@ -208,11 +208,8 @@ test('View Category Products', async ({ page }) => {
     leftSidebar.menJeansSubcategory,
   ]
 
-  const randomWomenSubcategoryIndex = faker.number.int({ min: 0, max: 2 })
-  const randomMenSubcategoryIndex = faker.number.int({ min: 0, max: 1 })
-
-  const selectedWomenSubcategoryLocator = womenSubcategoryLocators[randomWomenSubcategoryIndex]
-  const selectedMenSubcategoryLocator = menSubcategoryLocators[randomMenSubcategoryIndex]
+  const selectedWomenSubcategoryLocator = faker.helpers.arrayElement(womenSubcategoryLocators)
+  const selectedMenSubcategoryLocator = faker.helpers.arrayElement(menSubcategoryLocators)
 
   await expect(leftSidebar.categoryProducts).toBeVisible()
   await leftSidebar.womenCategory.click()
