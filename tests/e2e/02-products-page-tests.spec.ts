@@ -131,8 +131,6 @@ test('View & Cart Brand Products', async ({ page }) => {
     await firstRandomBrandNameLocator.innerText()
   )
 
-  console.log(`First: ${firstRandomBrandNameText}`)
-
   await firstRandomBrandNameLocator.click()
 
   await expect(
@@ -148,8 +146,6 @@ test('View & Cart Brand Products', async ({ page }) => {
   const secondRandomBrandNameText = extractCategoryName(
     await secondRandomBrandNameLocator.innerText()
   )
-
-  console.log(`Second: ${firstRandomBrandNameText}`)
 
   await secondRandomBrandNameLocator.click()
 
