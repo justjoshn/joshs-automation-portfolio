@@ -1,10 +1,10 @@
-const tsParser = require('@typescript-eslint/parser')
-const tsPlugin = require('@typescript-eslint/eslint-plugin')
-const playwrightPlugin = require('eslint-plugin-playwright')
-const eslintConfigPrettier = require('eslint-config-prettier')
-const globals = require('globals')
+import playwright from 'eslint-plugin-playwright'
+import tsParser from '@typescript-eslint/parser'
+import tsPlugin from '@typescript-eslint/eslint-plugin'
+import eslintConfigPrettier from 'eslint-config-prettier'
+import globals from 'globals'
 
-module.exports = [
+export default [
   { ignores: ['node_modules/**', 'dist/**'] },
   {
     files: ['**/*.ts'],
@@ -13,10 +13,10 @@ module.exports = [
       parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
       globals: { ...globals.node },
     },
-    plugins: { '@typescript-eslint': tsPlugin, playwright: playwrightPlugin },
+    plugins: { '@typescript-eslint': tsPlugin, playwright: playwright },
     rules: {
       ...tsPlugin.configs['recommended'].rules,
-      ...playwrightPlugin.configs['flat/recommended'].rules,
+      ...playwright.configs['flat/recommended'].rules,
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
