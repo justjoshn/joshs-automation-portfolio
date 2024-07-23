@@ -33,7 +33,7 @@ test('Verify Product quantity in Cart', async ({ page }) => {
   const homePage = new HomePage(page)
   const productDetailsPage = new ProductDetailsPage(page)
   const productCount: number = await homePage.featuredItems.count()
-  const randomIndex = faker.number.int({ min: 0, max: productCount })
+  const randomIndex = faker.number.int({ min: 0, max: productCount - 1 })
   const productQuantity = '4'
 
   await homePage.viewProductLinks.nth(randomIndex).click()
@@ -177,8 +177,8 @@ test('Remove Products From Cart', async ({ page }) => {
   const cartPage = new CartPage(page)
   const shopMenu = new ShopMenu(page)
   const productCount: number = await homePage.featuredItems.count()
-  const randomIndex1 = faker.number.int({ min: 0, max: productCount })
-  const randomIndex2 = faker.number.int({ min: 0, max: productCount })
+  const randomIndex1 = faker.number.int({ min: 0, max: productCount - 1 })
+  const randomIndex2 = faker.number.int({ min: 0, max: productCount - 1 })
 
   await homePage.featuredItemAddToCartLink.nth(randomIndex1).click()
   await homePage.continueShoppingButton.click()

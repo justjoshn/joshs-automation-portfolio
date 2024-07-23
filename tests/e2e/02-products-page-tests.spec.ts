@@ -50,7 +50,7 @@ test('Verify All Products and product detail page', async ({ page }) => {
 test('Search Product', async ({ page }) => {
   const productsPage = new ProductsPage(page)
   const productCount: number = await productsPage.featuredItems.count()
-  const randomIndex: number = faker.number.int({ min: 0, max: productCount })
+  const randomIndex: number = faker.number.int({ min: 0, max: productCount - 1 })
   const productNameText: string = await productsPage.productName.nth(randomIndex).innerText()
 
   await productsPage.searchInput.fill(productNameText)

@@ -140,9 +140,6 @@ test('Place Order: Register before Checkout', async ({ page }) => {
   const homePage = new HomePage(page)
   const cartPage = new CartPage(page)
   const shopMenu = new ShopMenu(page)
-  const productCount: number = await homePage.featuredItems.count()
-  const randomIndex1 = faker.number.int({ min: 0, max: productCount })
-  const randomIndex2 = faker.number.int({ min: 0, max: productCount })
   const signUpLoginPage = new SignupLoginPage(page)
   const accountInfoPage = new AccountInfoPage(page)
   const randomFullName = faker.person.fullName()
@@ -215,9 +212,17 @@ test('Place Order: Register before Checkout', async ({ page }) => {
   await expect(page.getByText('ACCOUNT CREATED!')).toBeVisible()
   await continueButton.click()
   await expect(shopMenu.navBar.getByText(`Logged in as ${randomFullName}`)).toBeVisible()
-  await homePage.featuredItemAddToCartLink.nth(randomIndex1).click()
+
+  const allAddToCartLinks = await homePage.featuredItemAddToCartLink.all()
+  const firstRandomAddToCartLink = faker.helpers.arrayElement(allAddToCartLinks)
+
+  const secondRandomAddToCartLink = faker.helpers.arrayElement(
+    allAddToCartLinks.filter(addToCartLink => addToCartLink !== firstRandomAddToCartLink)
+  )
+
+  await firstRandomAddToCartLink.click()
   await homePage.continueShoppingButton.click()
-  await homePage.featuredItemAddToCartLink.nth(randomIndex2).click()
+  await secondRandomAddToCartLink.click()
   await homePage.continueShoppingButton.click()
   await shopMenu.cartLink.click()
   await expect(cartPage.cartInfoTable).toBeVisible()
@@ -262,9 +267,6 @@ test('Place Order: Login before Checkout', async ({ page }) => {
   const cartPage = new CartPage(page)
   const shopMenu = new ShopMenu(page)
   const signUpLoginPage = new SignupLoginPage(page)
-  const productCount: number = await homePage.featuredItems.count()
-  const randomIndex1 = faker.number.int({ min: 0, max: productCount })
-  const randomIndex2 = faker.number.int({ min: 0, max: productCount })
   const randomParagraph = faker.lorem.paragraph()
   const randomCreditCardNumber = faker.finance.creditCardNumber()
   const randomCVC = faker.finance.creditCardCVV()
@@ -277,9 +279,16 @@ test('Place Order: Login before Checkout', async ({ page }) => {
   await signUpLoginPage.password.fill(password)
   await signUpLoginPage.loginButton.click()
   await expect(page.getByText(`Logged in as ${fullName}`)).toBeVisible()
-  await homePage.featuredItemAddToCartLink.nth(randomIndex1).click()
+  const allAddToCartLinks = await homePage.featuredItemAddToCartLink.all()
+  const firstRandomAddToCartLink = faker.helpers.arrayElement(allAddToCartLinks)
+
+  const secondRandomAddToCartLink = faker.helpers.arrayElement(
+    allAddToCartLinks.filter(addToCartLink => addToCartLink !== firstRandomAddToCartLink)
+  )
+
+  await firstRandomAddToCartLink.click()
   await homePage.continueShoppingButton.click()
-  await homePage.featuredItemAddToCartLink.nth(randomIndex2).click()
+  await secondRandomAddToCartLink.click()
   await homePage.continueShoppingButton.click()
   await shopMenu.cartLink.click()
   await expect(cartPage.cartInfoTable).toBeVisible()
