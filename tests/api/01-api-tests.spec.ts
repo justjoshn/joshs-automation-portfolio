@@ -4,6 +4,7 @@ import { faker } from '@faker-js/faker'
 const productsList = '/api/productsList'
 const brandsList = '/api/brandsList'
 const searchProduct = '/api/searchProduct'
+const notSupportedResponseMessage = 'This request method is not supported.'
 
 test('Get All Products List', async ({ request }) => {
   const response = await request.get(productsList)
@@ -35,6 +36,14 @@ test('Get All Products List', async ({ request }) => {
   })
 })
 
+test('POST To All Products List', async ({ request }) => {
+  const response = await request.post(productsList)
+  const jsonResponse = await response.json()
+
+  expect(jsonResponse.responseCode).toBe(405)
+  expect(jsonResponse.message).toBe(notSupportedResponseMessage)
+})
+
 test('Get All Brands List', async ({ request }) => {
   const response = await request.get(brandsList)
   const jsonResponse = await response.json()
@@ -63,6 +72,14 @@ test('Get All Brands List', async ({ request }) => {
   })
 })
 
+test('PUT To All Brands List', async ({ request }) => {
+  const response = await request.put(brandsList)
+  const jsonResponse = await response.json()
+
+  expect(jsonResponse.responseCode).toBe(405)
+  expect(jsonResponse.message).toBe(notSupportedResponseMessage)
+})
+
 test('POST To Search Product', async ({ request }) => {
   const getAllProductsResponse = await request.get(productsList)
   const products = await getAllProductsResponse.json()
@@ -86,4 +103,17 @@ test('POST To Search Product', async ({ request }) => {
     expect(product).toHaveProperty('name')
     expect(product.name).toBe(randomProduct)
   })
+})
+
+test('POST To Search Product without search_product parameter', async ({ request }) => {
+  const response = await request.post(searchProduct)
+  const jsonResponse = await response.json()
+
+  console.log(jsonResponse)
+
+  expect(jsonResponse.responseCode).toBe(400)
+
+  expect(jsonResponse.message).toBe(
+    'Bad request, search_product parameter is missing in POST request.'
+  )
 })
