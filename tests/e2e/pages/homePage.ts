@@ -42,7 +42,7 @@ export class HomePage {
 
     this.recommendedItemAddToCartLink = this.activeRecommendedItems.locator('.add-to-cart')
     this.recommendedItemName = this.activeRecommendedItems.locator('p')
-    this.scrollUpLink = page.locator('#scrollUp')
+    this.scrollUpLink = page.getByRole('link', { name: '' })
 
     this.fullFledgedHeader = page.getByRole('heading', {
       name: 'Full-Fledged practice website for Automation Engineers',
