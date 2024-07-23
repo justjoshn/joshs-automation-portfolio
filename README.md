@@ -64,13 +64,22 @@ yarn test:e2e
 ```
 
 - Run tests in headed mode (to see the browser):
-  `yarn test:headed`
+
+```
+yarn test:headed
+```
 
 - Run tests in debug mode:
-  `yarn test:debug`
+
+```
+yarn test:debug
+```
 
 - Run tests with Playwright UI:
-  `yarn test:ui`
+
+```
+yarn test:ui
+```
 
 ## Viewing Test Reports
 
