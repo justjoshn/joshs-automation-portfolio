@@ -15,6 +15,8 @@ export class HomePage {
   readonly activeRecommendedItems: Locator
   readonly recommendedItemAddToCartLink: Locator
   readonly recommendedItemName: Locator
+  readonly scrollUpLink: Locator
+  readonly fullFledgedHeader: Locator
 
   constructor(page: Page) {
     this.page = page
@@ -40,5 +42,10 @@ export class HomePage {
 
     this.recommendedItemAddToCartLink = this.activeRecommendedItems.locator('.add-to-cart')
     this.recommendedItemName = this.activeRecommendedItems.locator('p')
+    this.scrollUpLink = page.locator('#scrollUp')
+
+    this.fullFledgedHeader = page.getByRole('heading', {
+      name: 'Full-Fledged practice website for Automation Engineers',
+    })
   }
 }

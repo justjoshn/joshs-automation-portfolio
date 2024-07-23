@@ -389,3 +389,23 @@ test('Download Invoice after purchase order', async ({ page }) => {
   await expect(page.getByText('ACCOUNT DELETED!')).toBeVisible()
   await continueButton.click()
 })
+
+test('Verify Scroll Up using "Arrow" button and Scroll Down functionality', async ({ page }) => {
+  const homePage = new HomePage(page)
+  const subscriptionWidget = new SubscriptionWidget(page)
+
+  await subscriptionWidget.subscriptionHeader.scrollIntoViewIfNeeded()
+  await expect(subscriptionWidget.subscriptionHeader).toBeVisible()
+  await homePage.scrollUpLink.click()
+  await expect(homePage.fullFledgedHeader).toBeVisible()
+})
+
+test('Verify Scroll Up without "Arrow" button and Scroll Down functionality', async ({ page }) => {
+  const homePage = new HomePage(page)
+  const subscriptionWidget = new SubscriptionWidget(page)
+
+  await subscriptionWidget.subscriptionHeader.scrollIntoViewIfNeeded()
+  await expect(subscriptionWidget.subscriptionHeader).toBeVisible()
+  await homePage.fullFledgedHeader.scrollIntoViewIfNeeded()
+  await expect(homePage.fullFledgedHeader).toBeVisible()
+})
