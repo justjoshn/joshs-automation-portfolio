@@ -219,3 +219,21 @@ test('Search Products and Verify Cart After Login', async ({ page }) => {
     await expect(cartPage.cartProducts).toHaveCount(initialCartProductCount - i - 1)
   }
 })
+
+test('Add review on product', async ({ page }) => {
+  const productsPage = new ProductsPage(page)
+  const productDetailsPage = new ProductDetailsPage(page)
+  const randomName = faker.person.fullName()
+  const randomEmailAddress = faker.internet.email()
+  const randomParagraphs = faker.lorem.paragraphs()
+  const allViewProductLinks = await productsPage.viewProductLink.all()
+  const randomViewProductLink = faker.helpers.arrayElement(allViewProductLinks)
+
+  await randomViewProductLink.click()
+  await expect(productDetailsPage.writeYourReviewText).toBeVisible()
+  await productDetailsPage.yourNameInput.fill(randomName)
+  await productDetailsPage.emailAddressInput.fill(randomEmailAddress)
+  await productDetailsPage.addReviewHereTextArea.fill(randomParagraphs)
+  await productDetailsPage.submitButton.click()
+  await expect(page.getByText('Thank you for your review.')).toBeVisible()
+})
