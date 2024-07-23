@@ -14,7 +14,11 @@ export class SubscriptionWidget {
     this.page = page
     this.footerWidget = page.locator('.footer-widget')
     this.container = this.footerWidget.locator('.container')
-    this.subscriptionHeader = this.container.getByRole('heading', { name: /subscription/i })
+
+    this.subscriptionHeader = this.container.getByRole('heading', {
+      name: /subscription/i,
+    })
+
     this.emailAddressInput = this.container.getByPlaceholder('Your email address')
     this.submitButton = this.container.getByRole('button')
     this.successSubscribe = this.container.locator('#success-subscribe')

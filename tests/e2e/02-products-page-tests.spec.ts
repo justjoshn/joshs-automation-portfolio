@@ -27,14 +27,20 @@ test.beforeEach(async ({ page }) => {
 test('Verify All Products and product detail page', async ({ page }) => {
   const productDetailsPage = new ProductDetailsPage(page)
   const productsPage = new ProductsPage(page)
-
   const productName: string = await productsPage.productName.first().innerText()
   const productPrice: string = await productsPage.productPrice.first().innerText()
 
   await productsPage.viewProductLink.first().click()
   await expect(page).toHaveURL('/product_details/1')
-  await expect(productDetailsPage.productName).toHaveText(productName, { useInnerText: true })
-  await expect(productDetailsPage.productPrice).toHaveText(productPrice, { useInnerText: true })
+
+  await expect(productDetailsPage.productName).toHaveText(productName, {
+    useInnerText: true,
+  })
+
+  await expect(productDetailsPage.productPrice).toHaveText(productPrice, {
+    useInnerText: true,
+  })
+
   await expect(productDetailsPage.productCategory.getByText('Women > Tops')).toBeVisible()
   await expect(productDetailsPage.productAvailability.getByText('In Stock')).toBeVisible()
   await expect(productDetailsPage.productCondition.getByText('New')).toBeVisible()
@@ -54,7 +60,9 @@ test('Search Product', async ({ page }) => {
   const productNames = await productsPage.productName.all()
 
   for (const productName of productNames) {
-    await expect(productName).toHaveText(productNameText, { useInnerText: true })
+    await expect(productName).toHaveText(productNameText, {
+      useInnerText: true,
+    })
   }
 })
 
@@ -126,7 +134,7 @@ test('View & Cart Brand Products', async ({ page }) => {
   const firstRandomBrandNameLocator = faker.helpers.arrayElement(brandNameLocators)
 
   const secondRandomBrandNameLocator = faker.helpers.arrayElement(
-    brandNameLocators.filter((brandName) => brandName !== firstRandomBrandNameLocator)
+    brandNameLocators.filter(brandName => brandName !== firstRandomBrandNameLocator)
   )
 
   await expect(leftSidebar.brandProducts).toBeVisible()
@@ -138,7 +146,9 @@ test('View & Cart Brand Products', async ({ page }) => {
   await firstRandomBrandNameLocator.click()
 
   await expect(
-    page.getByRole('heading', { name: `Brand - ${firstRandomBrandNameText} Products` })
+    page.getByRole('heading', {
+      name: `Brand - ${firstRandomBrandNameText} Products`,
+    })
   ).toBeVisible()
 
   const firstAllBrandProducts = await productsPage.featuredItems.all()
@@ -154,7 +164,9 @@ test('View & Cart Brand Products', async ({ page }) => {
   await secondRandomBrandNameLocator.click()
 
   await expect(
-    page.getByRole('heading', { name: `Brand - ${secondRandomBrandNameText} Products` })
+    page.getByRole('heading', {
+      name: `Brand - ${secondRandomBrandNameText} Products`,
+    })
   ).toBeVisible()
 
   const secondAllBrandProducts = await productsPage.featuredItems.all()

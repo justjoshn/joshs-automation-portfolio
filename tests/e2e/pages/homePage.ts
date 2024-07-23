@@ -18,6 +18,7 @@ export class HomePage {
 
   constructor(page: Page) {
     this.page = page
+
     this.featuredItems = page.locator('.features_items .product-image-wrapper')
     this.viewProductLinks = this.featuredItems.getByRole('listitem').getByRole('link')
     this.productInfo = this.featuredItems.locator('.productinfo')
@@ -31,7 +32,6 @@ export class HomePage {
     })
 
     this.viewCartLink = this.productAddedModal.getByRole('link')
-
     this.recommendedItems = page.locator('.recommended_items')
 
     this.activeRecommendedItems = this.recommendedItems.locator(

@@ -1,16 +1,20 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2022",
     "module": "commonjs",
-    "moduleResolution": "Node",
-    "sourceMap": true,
-    "outDir": "../tests-out",
+    "lib": ["ES2022", "DOM"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "@playwright/test"]
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": { "*": ["node_modules/*"] },
+    "types": ["node", "playwright", "@playwright/test"]
   },
-  "include": ["tests/**/*.ts"],
+  "include": ["tests/**/*.ts", "playwright.config.ts"],
   "exclude": ["node_modules"]
 }

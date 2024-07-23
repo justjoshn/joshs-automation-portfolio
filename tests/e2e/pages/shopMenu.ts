@@ -24,9 +24,17 @@ export class ShopMenu {
       name: ' Signup / Login',
     })
 
-    this.testCasesLink = this.navBar.getByRole('link', { name: /test cases/i })
-    this.apiTestingLink = this.navBar.getByRole('link', { name: /api testing/i })
-    this.contactUsLink = this.navBar.getByRole('link', { name: /contact us/i })
+    this.testCasesLink = this.navBar.getByRole('link', {
+      name: /test cases/i,
+    })
+
+    this.apiTestingLink = this.navBar.getByRole('link', {
+      name: /api testing/i,
+    })
+
+    this.contactUsLink = this.navBar.getByRole('link', {
+      name: /contact us/i,
+    })
 
     this.deleteAccountLink = this.navBar.getByRole('link', {
       name: /delete account/i,

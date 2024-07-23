@@ -28,7 +28,10 @@ export class SignupLoginPage {
       name: 'Signup',
     })
 
-    this.loginButton = this.loginForm.getByRole('button', { name: /login/i })
+    this.loginButton = this.loginForm.getByRole('button', {
+      name: /login/i,
+    })
+
     this.logiinToYourAccountHeader = page.getByText('Login to your account')
     this.newUserSignUpHeader = page.getByText('New User Signup!')
   }

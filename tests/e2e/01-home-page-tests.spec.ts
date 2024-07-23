@@ -42,7 +42,10 @@ test('Verify Product quantity in Cart', async ({ page }) => {
   await productDetailsPage.quantityInput.fill(productQuantity)
   await productDetailsPage.addToCartButton.click()
   await productDetailsPage.viewCartLink.click()
-  await expect(cartPage.productQuantities).toHaveText(productQuantity, { useInnerText: true })
+
+  await expect(cartPage.productQuantities).toHaveText(productQuantity, {
+    useInnerText: true,
+  })
 })
 
 test('Place Order: Register while Checkout', async ({ page }) => {
@@ -218,7 +221,9 @@ test('View Category Products', async ({ page }) => {
   await selectedWomenSubcategoryLocator.click()
 
   await expect(
-    page.getByRole('heading', { name: `Women - ${randomWomenLinkText} Products` })
+    page.getByRole('heading', {
+      name: `Women - ${randomWomenLinkText} Products`,
+    })
   ).toBeVisible()
 
   await leftSidebar.menCategory.click()
@@ -228,7 +233,9 @@ test('View Category Products', async ({ page }) => {
   await selectedMenSubcategoryLocator.click()
 
   await expect(
-    page.getByRole('heading', { name: `Men - ${randomMenLinkText} Products` })
+    page.getByRole('heading', {
+      name: `Men - ${randomMenLinkText} Products`,
+    })
   ).toBeVisible()
 })
 
@@ -239,7 +246,12 @@ test('Add to cart from Recommended items', async ({ page }) => {
   await homePage.recommendedItems.scrollIntoViewIfNeeded()
 
   const recommendedItemsCount = await homePage.activeRecommendedItems.count()
-  const randomIndex = faker.number.int({ min: 0, max: recommendedItemsCount - 1 })
+
+  const randomIndex = faker.number.int({
+    min: 0,
+    max: recommendedItemsCount - 1,
+  })
+
   const randomReccommendedItemText = await homePage.recommendedItemName.nth(randomIndex).innerText()
 
   await homePage.recommendedItemAddToCartLink.nth(randomIndex).click()

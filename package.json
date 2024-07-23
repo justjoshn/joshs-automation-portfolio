@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "name": "joshs-automation-portfolio",
   "version": "1.0.0",
   "main": "index.js",
@@ -11,15 +10,27 @@
     "@faker-js/faker": "^8.4.1",
     "@playwright/test": "^1.45.3",
     "@types/eslint__js": "^8.42.3",
+    "@typescript-eslint/eslint-plugin": "^7.17.0",
+    "@typescript-eslint/parser": "^7.17.0",
     "eslint": "^9.7.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-playwright": "^1.6.2",
+    "globals": "^15.8.0",
     "prettier": "3.3.3",
     "typescript": "^5.5.3",
     "typescript-eslint": "^7.16.1"
   },
   "scripts": {
-    "run:e2e": "npx playwright test ./tests/e2e --project=chromium",
-    "format": "yarn prettier . --write"
+    "test": "playwright test --project=chromium",
+    "test:headed": "playwright test --headed --project=chromium",
+    "test:ui": "playwright test --ui --project=chromium",
+    "test:debug": "playwright test --debug --project=chromium",
+    "test:api": "playwright test tests/api --project=chromium",
+    "test:e2e": "playwright test tests/e2e --project=chromium",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "type-check": "tsc --noEmit",
+    "prepare": "playwright install"
   },
   "dependencies": {
     "@types/node": "^20.14.11"

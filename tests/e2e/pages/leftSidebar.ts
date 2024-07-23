@@ -25,29 +25,71 @@ export class LeftSidebar {
 
   constructor(page: Page) {
     this.page = page
+
     this.leftSidebar = page.locator('.left-sidebar')
     this.categoryProducts = this.leftSidebar.locator('.category-products')
     this.brandProducts = this.leftSidebar.locator('.brands_products')
-    this.poloCategory = this.brandProducts.getByRole('link', { name: /polo/i })
+
+    this.poloCategory = this.brandProducts.getByRole('link', {
+      name: /polo/i,
+    })
+
     this.hmCategory = this.brandProducts.getByRole('link', { name: /h&m/i })
-    this.madameCategory = this.brandProducts.getByRole('link', { name: /madame/i })
-    this.mastHarborCategory = this.brandProducts.getByRole('link', { name: /mast & harbour/i })
-    this.babyhubCategory = this.brandProducts.getByRole('link', { name: /babyhug/i })
+
+    this.madameCategory = this.brandProducts.getByRole('link', {
+      name: /madame/i,
+    })
+
+    this.mastHarborCategory = this.brandProducts.getByRole('link', {
+      name: /mast & harbour/i,
+    })
+
+    this.babyhubCategory = this.brandProducts.getByRole('link', {
+      name: /babyhug/i,
+    })
 
     this.allenSollyJuniorCategory = this.brandProducts.getByRole('link', {
       name: /allen solly junior/i,
     })
 
-    this.kookieKidsCategory = this.brandProducts.getByRole('link', { name: /biba/i })
-    this.bibaCategory = this.brandProducts.getByRole('link', { name: /biba/i })
-    this.womenCategory = this.categoryProducts.getByRole('link', { name: ' Women' })
+    this.kookieKidsCategory = this.brandProducts.getByRole('link', {
+      name: /biba/i,
+    })
+
+    this.bibaCategory = this.brandProducts.getByRole('link', {
+      name: /biba/i,
+    })
+
+    this.womenCategory = this.categoryProducts.getByRole('link', {
+      name: ' Women',
+    })
+
     this.womenPanel = this.categoryProducts.locator('#Women')
-    this.womenDressSubcategory = this.womenPanel.getByRole('link', { name: /dress/i })
-    this.womenTopsSubcategory = this.womenPanel.getByRole('link', { name: /tops/i })
-    this.womenSareeSubcategory = this.womenPanel.getByRole('link', { name: /saree/i })
-    this.menCategory = this.categoryProducts.getByRole('link', { name: ' Men' })
+
+    this.womenDressSubcategory = this.womenPanel.getByRole('link', {
+      name: /dress/i,
+    })
+
+    this.womenTopsSubcategory = this.womenPanel.getByRole('link', {
+      name: /tops/i,
+    })
+
+    this.womenSareeSubcategory = this.womenPanel.getByRole('link', {
+      name: /saree/i,
+    })
+
+    this.menCategory = this.categoryProducts.getByRole('link', {
+      name: ' Men',
+    })
+
     this.menPanel = this.categoryProducts.locator('#Men')
-    this.menTshirtsSubcategory = this.menPanel.getByRole('link', { name: /tshirts/i })
-    this.menJeansSubcategory = this.menPanel.getByRole('link', { name: /jeans/i })
+
+    this.menTshirtsSubcategory = this.menPanel.getByRole('link', {
+      name: /tshirts/i,
+    })
+
+    this.menJeansSubcategory = this.menPanel.getByRole('link', {
+      name: /jeans/i,
+    })
   }
 }

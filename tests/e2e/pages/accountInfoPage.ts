@@ -25,6 +25,7 @@ export class AccountInfoPage {
 
   constructor(page: Page) {
     this.page = page
+
     this.nameInput = page.getByTestId('name')
     this.emailInput = page.getByTestId('email')
     this.passwordInput = page.getByTestId('password')
@@ -46,7 +47,10 @@ export class AccountInfoPage {
       name: /create account/i,
     })
 
-    this.enterAccountInfoHeader = page.getByRole('heading', { name: /enter account information/i })
+    this.enterAccountInfoHeader = page.getByRole('heading', {
+      name: /enter account information/i,
+    })
+
     this.signUpNewsletterCheckbox = page.getByText('Sign up for our newsletter!')
     this.receiveOffersCheckbox = page.getByText('Receive special offers from our partners!')
   }
