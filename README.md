@@ -6,7 +6,9 @@ This repository contains an automation portfolio showcasing end-to-end (e2e) and
 
 ## Prerequisites
 
-- [Git](https://git-scm.com/) - [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm) - [Yarn](https://yarnpkg.com/)
+- [Git](https://git-scm.com/)
+- [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm)
+- [Yarn](https://yarnpkg.com/)
 
 ## Setup and Running Tests
 
