@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
 
   await page.goto('/')
-  await homePage.productImageWrapper.first().waitFor()
+  await homePage.featuredItems.first().waitFor()
 })
 
 test('Verify Test Cases Page', async ({ page }) => {

@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
 
   await page.goto('/')
-  await homePage.productImageWrapper.first().waitFor()
+  await homePage.featuredItems.first().waitFor()
 })
 
 test('Verify Subscription in home page', async ({ page }) => {
@@ -32,7 +32,7 @@ test('Verify Product quantity in Cart', async ({ page }) => {
   const cartPage = new CartPage(page)
   const homePage = new HomePage(page)
   const productDetailsPage = new ProductDetailsPage(page)
-  const productCount: number = await homePage.productImageWrapper.count()
+  const productCount: number = await homePage.featuredItems.count()
   const randomIndex = faker.number.int({ min: 0, max: productCount })
   const productQuantity = '4'
 
@@ -51,7 +51,7 @@ test('Place Order: Register while Checkout', async ({ page }) => {
   const shopMenu = new ShopMenu(page)
   const signUpLoginPage = new SignupLoginPage(page)
   const accountInfoPage = new AccountInfoPage(page)
-  const productCount: number = await homePage.productImageWrapper.count()
+  const productCount: number = await homePage.featuredItems.count()
   const randomIndex1 = faker.number.int({ min: 0, max: productCount })
   const randomIndex2 = faker.number.int({ min: 0, max: productCount })
   const randomFullName = faker.person.fullName()
@@ -96,9 +96,9 @@ test('Place Order: Register while Checkout', async ({ page }) => {
   const randomExpirationYear = futureDate.getFullYear().toString()
   const continueButton = page.getByRole('link', { name: /continue/i })
 
-  await homePage.productAddToCartLink.nth(randomIndex1).click()
+  await homePage.featuredItemAddToCartLink.nth(randomIndex1).click()
   await homePage.continueShoppingButton.click()
-  await homePage.productAddToCartLink.nth(randomIndex2).click()
+  await homePage.featuredItemAddToCartLink.nth(randomIndex2).click()
   await homePage.continueShoppingButton.click()
   await shopMenu.cartLink.click()
   await expect(cartPage.cartInfoTable).toBeVisible()
@@ -173,13 +173,13 @@ test('Remove Products From Cart', async ({ page }) => {
   const homePage = new HomePage(page)
   const cartPage = new CartPage(page)
   const shopMenu = new ShopMenu(page)
-  const productCount: number = await homePage.productImageWrapper.count()
+  const productCount: number = await homePage.featuredItems.count()
   const randomIndex1 = faker.number.int({ min: 0, max: productCount })
   const randomIndex2 = faker.number.int({ min: 0, max: productCount })
 
-  await homePage.productAddToCartLink.nth(randomIndex1).click()
+  await homePage.featuredItemAddToCartLink.nth(randomIndex1).click()
   await homePage.continueShoppingButton.click()
-  await homePage.productAddToCartLink.nth(randomIndex2).click()
+  await homePage.featuredItemAddToCartLink.nth(randomIndex2).click()
   await homePage.continueShoppingButton.click()
   await shopMenu.cartLink.click()
   await expect(cartPage.cartInfoTable).toBeVisible()
@@ -230,4 +230,19 @@ test('View Category Products', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: `Men - ${randomMenLinkText} Products` })
   ).toBeVisible()
+})
+
+test('Add to cart from Recommended items', async ({ page }) => {
+  const homePage = new HomePage(page)
+  const cartPage = new CartPage(page)
+
+  await homePage.recommendedItems.scrollIntoViewIfNeeded()
+
+  const recommendedItemsCount = await homePage.activeRecommendedItems.count()
+  const randomIndex = faker.number.int({ min: 0, max: recommendedItemsCount - 1 })
+  const randomReccommendedItemText = await homePage.recommendedItemName.nth(randomIndex).innerText()
+
+  await homePage.recommendedItemAddToCartLink.nth(randomIndex).click()
+  await homePage.viewCartLink.click()
+  await expect(cartPage.productNames.getByText(randomReccommendedItemText)).toBeVisible()
 })

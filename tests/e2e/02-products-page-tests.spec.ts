@@ -18,10 +18,10 @@ test.beforeEach(async ({ page }) => {
   const productsPage = new ProductsPage(page)
 
   await page.goto('/')
-  await homePage.productImageWrapper.first().waitFor()
+  await homePage.featuredItems.first().waitFor()
   await shopMenu.productsLink.click()
   await expect(productsPage.allProductsHeader).toBeVisible()
-  await productsPage.productImageWrapper.first().waitFor()
+  await productsPage.featuredItems.first().waitFor()
 })
 
 test('Verify All Products and product detail page', async ({ page }) => {
@@ -43,7 +43,7 @@ test('Verify All Products and product detail page', async ({ page }) => {
 
 test('Search Product', async ({ page }) => {
   const productsPage = new ProductsPage(page)
-  const productCount: number = await productsPage.productImageWrapper.count()
+  const productCount: number = await productsPage.featuredItems.count()
   const randomIndex: number = faker.number.int({ min: 0, max: productCount })
   const productNameText: string = await productsPage.productName.nth(randomIndex).innerText()
 
@@ -67,11 +67,11 @@ test('Add Products in Cart', async ({ page }) => {
   const secondProductName: string = await productsPage.productName.nth(1).innerText()
   const secondProductPrice: string = await productsPage.productPrice.nth(1).innerText()
 
-  await productsPage.productAddToCartLink.first().hover()
-  await productsPage.overlayAddToCartLink.first().click()
+  await productsPage.featuredItemAddToCartLink.first().hover()
+  await productsPage.featuredItemAddToCartLinkOverlay.first().click()
   await productsPage.continueShoppingButton.click()
-  await productsPage.productAddToCartLink.nth(1).hover()
-  await productsPage.overlayAddToCartLink.nth(1).click()
+  await productsPage.featuredItemAddToCartLink.nth(1).hover()
+  await productsPage.featuredItemAddToCartLinkOverlay.nth(1).click()
   await productsPage.viewCartLink.click()
   await expect(cartPage.cartProducts).toHaveCount(2)
 
@@ -141,7 +141,7 @@ test('View & Cart Brand Products', async ({ page }) => {
     page.getByRole('heading', { name: `Brand - ${firstRandomBrandNameText} Products` })
   ).toBeVisible()
 
-  const firstAllBrandProducts = await productsPage.productImageWrapper.all()
+  const firstAllBrandProducts = await productsPage.featuredItems.all()
 
   for (const firstBrandProduct of firstAllBrandProducts) {
     await expect(firstBrandProduct).toBeVisible()
@@ -157,7 +157,7 @@ test('View & Cart Brand Products', async ({ page }) => {
     page.getByRole('heading', { name: `Brand - ${secondRandomBrandNameText} Products` })
   ).toBeVisible()
 
-  const secondAllBrandProducts = await productsPage.productImageWrapper.all()
+  const secondAllBrandProducts = await productsPage.featuredItems.all()
 
   for (const secondBrandProduct of secondAllBrandProducts) {
     await expect(secondBrandProduct).toBeVisible()
@@ -183,7 +183,7 @@ test('Search Products and Verify Cart After Login', async ({ page }) => {
     await expect(productName.getByText(randomProductNameText)).toBeVisible()
   }
 
-  const allAddToCartButtons = await productsPage.productAddToCartLink.all()
+  const allAddToCartButtons = await productsPage.featuredItemAddToCartLink.all()
 
   for (const addToCartButton of allAddToCartButtons) {
     await addToCartButton.click()

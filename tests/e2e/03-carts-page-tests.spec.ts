@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
   const shopMenu = new ShopMenu(page)
 
   await page.goto('/')
-  await homePage.productImageWrapper.first().waitFor()
+  await homePage.featuredItems.first().waitFor()
   await shopMenu.cartLink.click()
 })
 

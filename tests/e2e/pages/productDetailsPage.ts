@@ -40,7 +40,7 @@ export class ProductDetailsPage {
 
     this.viewCartLink = this.productAddedModal.getByRole('link', { name: /view cart/i })
     this.shopDetailsTab = page.locator('.shop-details-tab')
-    this.writeYourReviewText = this.shopDetailsTab.getByText(/write your review/i)
+    this.writeYourReviewText = this.shopDetailsTab.getByRole('link', { name: 'Write Your Review' })
     this.yourNameInput = this.shopDetailsTab.getByPlaceholder('Your Name')
     this.emailAddressInput = this.shopDetailsTab.getByPlaceholder('Email Address')
     this.addReviewHereTextArea = this.shopDetailsTab.getByPlaceholder('Add Review Here!')

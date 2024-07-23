@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
   const shopMenu = new ShopMenu(page)
 
   await page.goto('/')
-  await homePage.productImageWrapper.first().waitFor()
+  await homePage.featuredItems.first().waitFor()
   await shopMenu.contactUsLink.click()
 })
 
@@ -38,7 +38,7 @@ test.fixme('Contact Us Form', async ({ page }) => {
 
   await shopMenu.homeLink.click()
 
-  const allProducts = await homePage.productImageWrapper.all()
+  const allProducts = await homePage.featuredItems.all()
 
   for (const product of allProducts) {
     await product.scrollIntoViewIfNeeded()
