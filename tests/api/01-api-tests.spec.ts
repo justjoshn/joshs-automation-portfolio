@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { Brand, Product } from './types/product.types'
 import { faker } from '@faker-js/faker'
 
 const productsList = '/api/productsList'
@@ -55,8 +56,9 @@ test('Get All Products List', async ({ request }) => {
   expect(jsonResponse).toHaveProperty('products')
   expect(Array.isArray(jsonResponse.products)).toBe(true)
   expect(jsonResponse.products.length).toBeGreaterThan(0)
+  expect(jsonResponse.products).toBeTruthy()
 
-  jsonResponse.products.forEach(product => {
+  jsonResponse.products.forEach((product: Product) => {
     expect(product).toHaveProperty('id')
     expect(typeof product.id).toBe('number')
     expect(product).toHaveProperty('name')
@@ -93,8 +95,9 @@ test('Get All Brands List', async ({ request }) => {
   expect(jsonResponse).toHaveProperty('brands')
   expect(Array.isArray(jsonResponse.brands)).toBe(true)
   expect(jsonResponse.brands.length).toBeGreaterThan(0)
+  expect(jsonResponse.brands).toBeTruthy()
 
-  jsonResponse.brands.forEach(brand => {
+  jsonResponse.brands.forEach((brand: Brand) => {
     expect(brand).toHaveProperty('id')
     expect(typeof brand.id).toBe('number')
     expect(brand).toHaveProperty('brand')
@@ -140,7 +143,7 @@ test('POST To Search Product', async ({ request }) => {
 
   expect(searchResults.responseCode).toBe(200)
 
-  searchResults.products.forEach(product => {
+  searchResults.products.forEach((product: Product) => {
     expect(product).toHaveProperty('name')
     expect(product.name).toBe(randomProduct)
   })
@@ -280,4 +283,105 @@ test('DELETE METHOD To Delete User Account', async ({ request }) => {
 
   expect(deleteUserJson.responseCode).toBe(200)
   expect(deleteUserJson.message).toBe('Account deleted!')
+})
+
+test('PUT METHOD To Update User Account', async ({ request }) => {
+  const shortWord = faker.lorem.word({ strategy: 'shortest' })
+
+  const createUserResponse = await request.post(createAccount, {
+    form: {
+      name: randomFullName,
+      email: randomEmail,
+      password: randomPassword,
+      title: randomTitle,
+      birth_date: randomDay,
+      birth_month: randomMonth,
+      birth_year: randomYear,
+      firstname: randomFirstName,
+      lastname: randomLastName,
+      company: randomCompany,
+      address1: randomAddress1,
+      address2: randomAddress2,
+      country: randomCountry,
+      zipcode: randomZipCode,
+      state: randomState,
+      city: randomCity,
+      mobile_number: randomPhoneNumber,
+    },
+  })
+
+  expect(createUserResponse.ok()).toBeTruthy()
+
+  const updateUserResponse = await request.put(updateAccount, {
+    form: {
+      name: randomFullName + shortWord,
+      email: randomEmail,
+      password: randomPassword,
+      title: randomTitle + shortWord,
+      birth_date: randomDay + shortWord,
+      birth_month: randomMonth + shortWord,
+      birth_year: randomYear + shortWord,
+      firstname: randomFirstName + shortWord,
+      lastname: randomLastName + shortWord,
+      company: randomCompany + shortWord,
+      address1: randomAddress1 + shortWord,
+      address2: randomAddress2 + shortWord,
+      country: randomCountry + shortWord,
+      zipcode: randomZipCode + shortWord,
+      state: randomState + shortWord,
+      city: randomCity + shortWord,
+      mobile_number: randomPhoneNumber + shortWord,
+    },
+  })
+
+  const updateUserJson = await updateUserResponse.json()
+
+  expect(updateUserJson.responseCode).toBe(200)
+  expect(updateUserJson.message).toBe('User updated!')
+})
+
+test('GET user account detail by email', async ({ request }) => {
+  const getUserDetailResponse = await request.get(getUserDetailByEmail, {
+    params: {
+      email: email,
+    },
+  })
+
+  const getUserDetailJson = await getUserDetailResponse.json()
+
+  expect(getUserDetailJson.responseCode).toBe(200)
+  expect(getUserDetailJson).toHaveProperty('user')
+  expect(typeof getUserDetailJson.user).toBe('object')
+  expect(Array.isArray(getUserDetailJson.user)).toBe(false)
+  expect(getUserDetailJson.user).toBeTruthy()
+  expect(getUserDetailJson.user).toHaveProperty('id')
+  expect(typeof getUserDetailJson.user.id).toBe('number')
+  expect(getUserDetailJson.user).toHaveProperty('email')
+  expect(typeof getUserDetailJson.user.email).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('title')
+  expect(typeof getUserDetailJson.user.title).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('birth_day')
+  expect(typeof getUserDetailJson.user.birth_day).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('birth_month')
+  expect(typeof getUserDetailJson.user.birth_month).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('birth_year')
+  expect(typeof getUserDetailJson.user.birth_year).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('first_name')
+  expect(typeof getUserDetailJson.user.first_name).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('last_name')
+  expect(typeof getUserDetailJson.user.last_name).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('company')
+  expect(typeof getUserDetailJson.user.company).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('address1')
+  expect(typeof getUserDetailJson.user.address1).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('address2')
+  expect(typeof getUserDetailJson.user.address2).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('country')
+  expect(typeof getUserDetailJson.user.country).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('state')
+  expect(typeof getUserDetailJson.user.state).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('city')
+  expect(typeof getUserDetailJson.user.city).toBe('string')
+  expect(getUserDetailJson.user).toHaveProperty('zipcode')
+  expect(typeof getUserDetailJson.user.zipcode).toBe('string')
 })
