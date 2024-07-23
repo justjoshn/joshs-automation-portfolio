@@ -7,6 +7,10 @@ import { CartPage } from './pages/cartPage'
 import { faker } from '@faker-js/faker'
 import { LeftSidebar } from './pages/leftSidebar'
 import { extractCategoryName } from './utils/helpers'
+import { SignupLoginPage } from './pages/signupLoginPage'
+
+const email = 'firstName@email.com'
+const password = 'password'
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -157,5 +161,61 @@ test('View & Cart Brand Products', async ({ page }) => {
 
   for (const secondBrandProduct of secondAllBrandProducts) {
     await expect(secondBrandProduct).toBeVisible()
+  }
+})
+
+test('Search Products and Verify Cart After Login', async ({ page }) => {
+  const productsPage = new ProductsPage(page)
+  const cartPage = new CartPage(page)
+  const shopMenu = new ShopMenu(page)
+  const signupLoginPage = new SignupLoginPage(page)
+  const firstAllProductNames = await productsPage.productName.all()
+  const randomProductName = faker.helpers.arrayElement(firstAllProductNames)
+  const randomProductNameText = await randomProductName.innerText()
+
+  await productsPage.searchInput.fill(randomProductNameText)
+  await productsPage.submitSearchButton.click()
+  await expect(productsPage.searchedProductsHeader).toBeVisible()
+
+  const secondAllProductNames = await productsPage.productName.all()
+
+  for (const productName of secondAllProductNames) {
+    await expect(productName.getByText(randomProductNameText)).toBeVisible()
+  }
+
+  const allAddToCartButtons = await productsPage.productAddToCartLink.all()
+
+  for (const addToCartButton of allAddToCartButtons) {
+    await addToCartButton.click()
+    await productsPage.continueShoppingButton.click()
+  }
+
+  await shopMenu.cartLink.click()
+
+  const firstAllCartProductNames = await cartPage.productNames.all()
+
+  for (const firstCartProductName of firstAllCartProductNames) {
+    await expect(firstCartProductName.getByText(randomProductNameText)).toBeVisible()
+  }
+
+  await shopMenu.signupLoginLink.click()
+  await expect(signupLoginPage.logiinToYourAccountHeader).toBeVisible()
+  await signupLoginPage.loginEmailAddressInput.fill(email)
+  await signupLoginPage.password.fill(password)
+  await signupLoginPage.loginButton.click()
+  await shopMenu.cartLink.click()
+  await cartPage.cartProducts.first().waitFor()
+
+  const secondAllCartProductNames = await cartPage.productNames.all()
+
+  for (const secondCartProductName of secondAllCartProductNames) {
+    await expect(secondCartProductName.getByText(randomProductNameText)).toBeVisible()
+  }
+
+  const initialCartProductCount = await cartPage.cartProducts.count()
+
+  for (let i = 0; i < initialCartProductCount; i++) {
+    await cartPage.cartQuantityDeleteLink.first().click()
+    await expect(cartPage.cartProducts).toHaveCount(initialCartProductCount - i - 1)
   }
 })

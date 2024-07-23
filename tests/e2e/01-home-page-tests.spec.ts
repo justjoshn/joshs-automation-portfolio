@@ -169,8 +169,7 @@ test('Place Order: Register while Checkout', async ({ page }) => {
   await continueButton.click()
 })
 
-// TODO: test is unable to click the cart quantity delete link
-test.fixme('Remove Products From Cart', async ({ page }) => {
+test('Remove Products From Cart', async ({ page }) => {
   const homePage = new HomePage(page)
   const cartPage = new CartPage(page)
   const shopMenu = new ShopMenu(page)
@@ -184,14 +183,14 @@ test.fixme('Remove Products From Cart', async ({ page }) => {
   await homePage.continueShoppingButton.click()
   await shopMenu.cartLink.click()
   await expect(cartPage.cartInfoTable).toBeVisible()
+  await cartPage.cartProducts.first().waitFor()
 
-  const cartProducts = await cartPage.cartProducts.count()
+  const initialCartProductCount = await cartPage.cartProducts.count()
 
-  for (let i = 0; i < cartProducts; i++) {
-    await cartPage.cartQuantityDeleteLink.nth(i).click({ force: true })
+  for (let i = 0; i < initialCartProductCount; i++) {
+    await cartPage.cartQuantityDeleteLink.first().click()
+    await expect(cartPage.cartProducts).toHaveCount(initialCartProductCount - i - 1)
   }
-
-  await expect(cartPage.cartProducts).toBeHidden()
 })
 
 test('View Category Products', async ({ page }) => {

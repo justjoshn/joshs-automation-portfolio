@@ -112,6 +112,6 @@ export class CartPage {
     })
 
     this.orderSuccessfulMessage = page.getByText(/your order has been placed successfully/i)
-    this.cartQuantityDeleteLink = this.cartInfoTable.locator('.cart_quantity_delete')
+    this.cartQuantityDeleteLink = this.cartInfoTable.locator('.cart_delete > a')
   }
 }
