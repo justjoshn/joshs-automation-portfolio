@@ -16,7 +16,7 @@ module.exports = [
     plugins: { '@typescript-eslint': tsPlugin, playwright: playwrightPlugin },
     rules: {
       ...tsPlugin.configs['recommended'].rules,
-      ...playwrightPlugin.configs['recommended'].rules,
+      ...playwrightPlugin.configs['flat/recommended'].rules,
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',

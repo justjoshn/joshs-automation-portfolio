@@ -10,15 +10,15 @@
     "@faker-js/faker": "^8.4.1",
     "@playwright/test": "^1.45.3",
     "@types/eslint__js": "^8.42.3",
-    "@typescript-eslint/eslint-plugin": "^7.17.0",
-    "@typescript-eslint/parser": "^7.17.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0-alpha.51",
+    "@typescript-eslint/parser": "^8.0.0-alpha.51",
     "eslint": "^9.7.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-playwright": "^1.6.2",
     "globals": "^15.8.0",
     "prettier": "3.3.3",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^7.16.1"
+    "typescript-eslint": "8.0.0-alpha.51"
   },
   "scripts": {
     "test": "playwright test --project=chromium",
