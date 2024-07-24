@@ -1,0 +1,33 @@
+name: Manually Run API Tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: use node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: install playwright browsers
+        run: yarn playwright install
+
+      - name: run api tests
+        run: yarn test:api
+
+      - name: upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-e2e-report
+          path: playwright-report/
+          retention-days: 30
