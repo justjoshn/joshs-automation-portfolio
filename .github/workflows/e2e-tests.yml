@@ -16,13 +16,10 @@ jobs:
           node-version-file: '.nvmrc'
 
       - name: install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: install playwright browsers
-        run: yarn playwright install --with-deps
+        run: yarn install --with-deps --frozen-lockfile
 
       - name: run e2e tests
-        run: yarn run:e2e
+        run: yarn test:e2e
 
       - name: upload test results
         if: always()
