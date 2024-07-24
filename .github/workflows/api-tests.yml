@@ -19,7 +19,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: install playwright browsers
-        run: yarn playwright install
+        run: yarn playwright install --with-deps
 
       - name: run api tests
         run: yarn test:api
