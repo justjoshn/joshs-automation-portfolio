@@ -21,11 +21,10 @@ test.beforeEach(async ({ page }) => {
 
 test('Verify Subscription in home page', async ({ page }) => {
   const subscriptionWidget = new SubscriptionWidget(page)
-  const randomEmail = faker.internet.email()
 
   await subscriptionWidget.footerWidget.scrollIntoViewIfNeeded()
   await expect(subscriptionWidget.subscriptionHeader).toBeVisible()
-  await subscriptionWidget.emailAddressInput.fill(randomEmail)
+  await subscriptionWidget.emailAddressInput.fill(randomData.personalInfo.email)
   await subscriptionWidget.submitButton.click()
   await expect(subscriptionWidget.successSubscribe).not.toHaveClass('hide')
   await expect(subscriptionWidget.successfulAlert).toBeVisible()

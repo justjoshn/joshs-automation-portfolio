@@ -59,6 +59,8 @@ export const generateRandomData = () => {
     financialInfo,
     company: faker.company.name(),
     paragraph: faker.lorem.paragraph(),
+    paragraphs: faker.lorem.paragraphs(),
+    words: faker.lorem.words(),
   }
 }
 

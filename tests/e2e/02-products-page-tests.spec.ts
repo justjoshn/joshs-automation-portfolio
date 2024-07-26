@@ -8,9 +8,10 @@ import { faker } from '@faker-js/faker'
 import { LeftSidebar } from './pages/leftSidebar'
 import { extractCategoryName } from './utils/helpers'
 import { SignupLoginPage } from './pages/signupLoginPage'
+import { generateRandomData, useStaticData } from './utils/helpers'
 
-const email = 'firstName@email.com'
-const password = 'password'
+const randomData = generateRandomData()
+const staticData = useStaticData()
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -212,8 +213,12 @@ test('Search Products and Verify Cart After Login', async ({ page }) => {
 
   await shopMenu.signupLoginLink.click()
   await expect(signupLoginPage.logiinToYourAccountHeader).toBeVisible()
-  await signupLoginPage.loginEmailAddressInput.fill(email)
-  await signupLoginPage.password.fill(password)
+
+  await signupLoginPage.fillOutLoginForm(
+    staticData.personalInfo.email,
+    staticData.personalInfo.password
+  )
+
   await signupLoginPage.loginButton.click()
   await shopMenu.cartLink.click()
   await cartPage.cartProducts.first().waitFor()
@@ -235,17 +240,14 @@ test('Search Products and Verify Cart After Login', async ({ page }) => {
 test('Add review on product', async ({ page }) => {
   const productsPage = new ProductsPage(page)
   const productDetailsPage = new ProductDetailsPage(page)
-  const randomName = faker.person.fullName()
-  const randomEmailAddress = faker.internet.email()
-  const randomParagraphs = faker.lorem.paragraphs()
   const allViewProductLinks = await productsPage.viewProductLink.all()
   const randomViewProductLink = faker.helpers.arrayElement(allViewProductLinks)
 
   await randomViewProductLink.click()
   await expect(productDetailsPage.writeYourReviewText).toBeVisible()
-  await productDetailsPage.yourNameInput.fill(randomName)
-  await productDetailsPage.emailAddressInput.fill(randomEmailAddress)
-  await productDetailsPage.addReviewHereTextArea.fill(randomParagraphs)
+  await productDetailsPage.yourNameInput.fill(randomData.personalInfo.fullName)
+  await productDetailsPage.emailAddressInput.fill(randomData.personalInfo.email)
+  await productDetailsPage.addReviewHereTextArea.fill(randomData.paragraphs)
   await productDetailsPage.submitButton.click()
   await expect(page.getByText('Thank you for your review.')).toBeVisible()
 })
