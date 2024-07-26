@@ -3,7 +3,7 @@ import { type Locator, type Page } from '@playwright/test'
 export class SignupLoginPage {
   readonly page: Page
   readonly form: Locator
-  readonly signForm: Locator
+  readonly signUpForm: Locator
   readonly loginForm: Locator
   readonly nameInput: Locator
   readonly signupEmailAddressInput: Locator
@@ -17,14 +17,14 @@ export class SignupLoginPage {
   constructor(page: Page) {
     this.page = page
     this.form = page.locator('form')
-    this.signForm = this.form.filter({ hasText: 'Signup' })
+    this.signUpForm = this.form.filter({ hasText: 'Signup' })
     this.loginForm = this.form.filter({ hasText: 'Login' })
-    this.nameInput = this.signForm.getByPlaceholder('Name')
-    this.signupEmailAddressInput = this.signForm.getByPlaceholder('Email Address')
+    this.nameInput = this.signUpForm.getByPlaceholder('Name')
+    this.signupEmailAddressInput = this.signUpForm.getByPlaceholder('Email Address')
     this.loginEmailAddressInput = this.loginForm.getByPlaceholder('Email Address')
     this.password = this.loginForm.getByPlaceholder('Password')
 
-    this.signUpButton = this.signForm.getByRole('button', {
+    this.signUpButton = this.signUpForm.getByRole('button', {
       name: 'Signup',
     })
 
@@ -34,5 +34,15 @@ export class SignupLoginPage {
 
     this.logiinToYourAccountHeader = page.getByText('Login to your account')
     this.newUserSignUpHeader = page.getByText('New User Signup!')
+  }
+
+  async fillOutSignUpForm(fullName: string, email: string) {
+    await this.nameInput.fill(fullName)
+    await this.signupEmailAddressInput.fill(email)
+  }
+
+  async fillOutLoginForm(email: string, password: string) {
+    await this.loginEmailAddressInput.fill(email)
+    await this.password.fill(password)
   }
 }

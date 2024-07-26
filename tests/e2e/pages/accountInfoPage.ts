@@ -1,4 +1,5 @@
 import { type Locator, type Page } from '@playwright/test'
+import { generateRandomData } from '../utils/helpers'
 
 export class AccountInfoPage {
   readonly page: Page
@@ -53,5 +54,29 @@ export class AccountInfoPage {
 
     this.signUpNewsletterCheckbox = page.getByText('Sign up for our newsletter!')
     this.receiveOffersCheckbox = page.getByText('Receive special offers from our partners!')
+  }
+
+  async fillOutAccountInfo() {
+    const randomData = generateRandomData()
+
+    await this.page.getByLabel(randomData.personalInfo.title).click()
+    await this.passwordInput.fill(randomData.personalInfo.password)
+    await this.daySelect.selectOption(randomData.personalInfo.birthDay)
+    await this.monthSelect.selectOption(randomData.personalInfo.birthMonth)
+    await this.yearSelect.selectOption(randomData.personalInfo.birthYear)
+    await this.signUpNewsletterCheckbox.click()
+    await this.receiveOffersCheckbox.click()
+    await this.firstNameInput.fill(randomData.personalInfo.firstName)
+    await this.lastNameInput.fill(randomData.personalInfo.lastName)
+    await this.companyInput.fill(randomData.company)
+    await this.address1Input.fill(randomData.addressInfo.address1)
+    await this.address2Input.fill(randomData.addressInfo.address2)
+    await this.countrySelect.selectOption(randomData.addressInfo.country)
+    await this.stateInput.fill(randomData.addressInfo.state)
+    await this.cityInput.fill(randomData.addressInfo.city)
+    await this.zipcodeInput.fill(randomData.addressInfo.zipCode)
+    await this.mobileNumberInput.fill(randomData.personalInfo.phoneNumber)
+
+    return randomData
   }
 }

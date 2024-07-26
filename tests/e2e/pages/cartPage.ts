@@ -1,4 +1,5 @@
 import { type Locator, type Page } from '@playwright/test'
+import { generateRandomData } from '../utils/helpers'
 
 export class CartPage {
   readonly page: Page
@@ -113,5 +114,17 @@ export class CartPage {
 
     this.orderSuccessfulMessage = page.getByText(/your order has been placed successfully/i)
     this.cartQuantityDeleteLink = this.cartInfoTable.locator('.cart_delete > a')
+  }
+
+  async fillOutPaymentInfo() {
+    const randomData = generateRandomData()
+
+    await this.nameOnCardInput.fill(randomData.personalInfo.fullName)
+    await this.cardNumberInput.fill(randomData.financialInfo.creditCardNumber)
+    await this.cvcInput.fill(randomData.financialInfo.cvcNumber)
+    await this.expirationMonthInput.fill(randomData.financialInfo.expirationMonth)
+    await this.expirationYearInput.fill(randomData.financialInfo.expirationYear)
+
+    return randomData
   }
 }
