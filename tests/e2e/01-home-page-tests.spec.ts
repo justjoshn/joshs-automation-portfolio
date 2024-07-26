@@ -8,6 +8,9 @@ import { ShopMenu } from './pages/shopMenu'
 import { SignupLoginPage } from './pages/signupLoginPage'
 import { AccountInfoPage } from './pages/accountInfoPage'
 import { LeftSidebar } from './pages/leftSidebar'
+import { generateRandomData } from './utils/helpers'
+
+const randomData = generateRandomData()
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -57,46 +60,6 @@ test('Place Order: Register while Checkout', async ({ page }) => {
   const productCount: number = await homePage.featuredItems.count()
   const randomIndex1 = faker.number.int({ min: 0, max: productCount - 1 })
   const randomIndex2 = faker.number.int({ min: 0, max: productCount - 1 })
-  const randomFullName = faker.person.fullName()
-  const randomEmail = faker.internet.email()
-  const randomTitle = faker.helpers.arrayElement(['Mr.', 'Mrs.'])
-
-  const randomDate = faker.date.birthdate({
-    min: 1982,
-    max: 2006,
-    mode: 'year',
-  })
-
-  const randomPassword = faker.internet.password()
-  const randomDay = randomDate.getDate().toString()
-  const randomMonth = (randomDate.getMonth() + 1).toString()
-  const randomYear = randomDate.getFullYear().toString()
-  const randomFirstName = faker.person.firstName()
-  const randomLastName = faker.person.lastName()
-  const randomCompany = faker.company.name()
-  const randomAddress1 = faker.location.streetAddress()
-  const randomAddress2 = faker.location.secondaryAddress()
-
-  const randomCountry = faker.helpers.arrayElement([
-    'India',
-    'United States',
-    'Canada',
-    'Australia',
-    'Israel',
-    'New Zealand',
-    'Singapore',
-  ])
-
-  const randomState = faker.location.state()
-  const randomCity = faker.location.city()
-  const randomZipCode = faker.location.zipCode()
-  const randomPhoneNumber = faker.phone.number()
-  const randomParagraph = faker.lorem.paragraph()
-  const randomCreditCardNumber = faker.finance.creditCardNumber()
-  const randomCVC = faker.finance.creditCardCVV()
-  const futureDate = faker.date.future({ years: 10 })
-  const randomExpirationMonth = futureDate.getMonth().toString()
-  const randomExpirationYear = futureDate.getFullYear().toString()
   const continueButton = page.getByRole('link', { name: /continue/i })
 
   await homePage.featuredItemAddToCartLink.nth(randomIndex1).click()
@@ -108,60 +71,72 @@ test('Place Order: Register while Checkout', async ({ page }) => {
   await cartPage.proceedToCheckout.click()
   await cartPage.registerLoginLink.click()
   await expect(signUpLoginPage.newUserSignUpHeader).toBeVisible()
-  await signUpLoginPage.nameInput.fill(randomFullName)
-  await signUpLoginPage.signupEmailAddressInput.fill(randomEmail)
+
+  await signUpLoginPage.fillOutSignUpForm(
+    randomData.personalInfo.fullName,
+    randomData.personalInfo.email
+  )
+
   await signUpLoginPage.signUpButton.click()
   await expect(accountInfoPage.enterAccountInfoHeader).toBeVisible()
-  await page.getByLabel(randomTitle).click()
-  await expect(accountInfoPage.nameInput).toHaveValue(randomFullName)
-  await expect(accountInfoPage.emailInput).toHaveValue(randomEmail)
-  await accountInfoPage.passwordInput.fill(randomPassword)
-  await accountInfoPage.daySelect.selectOption(randomDay)
-  await accountInfoPage.monthSelect.selectOption(randomMonth)
-  await accountInfoPage.yearSelect.selectOption(randomYear)
-  await accountInfoPage.signUpNewsletterCheckbox.click()
-  await accountInfoPage.receiveOffersCheckbox.click()
-  await accountInfoPage.firstNameInput.fill(randomFirstName)
-  await accountInfoPage.lastNameInput.fill(randomLastName)
-  await accountInfoPage.companyInput.fill(randomCompany)
-  await accountInfoPage.address1Input.fill(randomAddress1)
-  await accountInfoPage.address2Input.fill(randomAddress2)
-  await accountInfoPage.countrySelect.selectOption(randomCountry)
-  await accountInfoPage.stateInput.fill(randomState)
-  await accountInfoPage.cityInput.fill(randomCity)
-  await accountInfoPage.zipcodeInput.fill(randomZipCode)
-  await accountInfoPage.mobileNumberInput.fill(randomPhoneNumber)
+
+  const generatedData = await accountInfoPage.fillOutAccountInfo()
+  const fullNameValue = await accountInfoPage.nameInput.inputValue()
+
   await accountInfoPage.createAccountButton.click()
   await expect(page.getByText('ACCOUNT CREATED!')).toBeVisible()
   await continueButton.click()
-  await expect(shopMenu.navBar.getByText(`Logged in as ${randomFullName}`)).toBeVisible()
+  await expect(shopMenu.navBar.getByText(`Logged in as ${fullNameValue}`)).toBeVisible()
   await shopMenu.cartLink.click()
   await cartPage.proceedToCheckout.click()
-  await expect(cartPage.deliveryFirstName.getByText(randomFirstName)).toBeVisible()
-  await expect(cartPage.deliveryLastName.getByText(randomLastName)).toBeVisible()
-  await expect(cartPage.deliveryAddress1.getByText(randomAddress1)).toBeVisible()
-  await expect(cartPage.deliveryAddress2.getByText(randomAddress2)).toBeVisible()
-  await expect(cartPage.deliveryCity.getByText(randomCity)).toBeVisible()
-  await expect(cartPage.deliveryState.getByText(randomState)).toBeVisible()
-  await expect(cartPage.deliveryPostCode.getByText(randomZipCode)).toBeVisible()
-  await expect(cartPage.deliveryCountry.getByText(randomCountry)).toBeVisible()
-  await expect(cartPage.deliveryPhoneNumber.getByText(randomPhoneNumber)).toBeVisible()
-  await expect(cartPage.billingFirstName.getByText(randomFirstName)).toBeVisible()
-  await expect(cartPage.billingLastName.getByText(randomLastName)).toBeVisible()
-  await expect(cartPage.billingAddress1.getByText(randomAddress1)).toBeVisible()
-  await expect(cartPage.billingAddress2.getByText(randomAddress2)).toBeVisible()
-  await expect(cartPage.billingCity.getByText(randomCity)).toBeVisible()
-  await expect(cartPage.billingState.getByText(randomState)).toBeVisible()
-  await expect(cartPage.billingPostCode.getByText(randomZipCode)).toBeVisible()
-  await expect(cartPage.billingCountry.getByText(randomCountry)).toBeVisible()
-  await expect(cartPage.billingPhoneNumber.getByText(randomPhoneNumber)).toBeVisible()
-  await cartPage.commentTextArea.fill(randomParagraph)
+
+  await expect(
+    cartPage.deliveryFirstName.getByText(generatedData.personalInfo.firstName)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.deliveryLastName.getByText(generatedData.personalInfo.lastName)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.deliveryAddress1.getByText(generatedData.addressInfo.address1)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.deliveryAddress2.getByText(generatedData.addressInfo.address2)
+  ).toBeVisible()
+
+  await expect(cartPage.deliveryCity.getByText(generatedData.addressInfo.city)).toBeVisible()
+  await expect(cartPage.deliveryState.getByText(generatedData.addressInfo.state)).toBeVisible()
+  await expect(cartPage.deliveryPostCode.getByText(generatedData.addressInfo.zipCode)).toBeVisible()
+  await expect(cartPage.deliveryCountry.getByText(generatedData.addressInfo.country)).toBeVisible()
+
+  await expect(
+    cartPage.deliveryPhoneNumber.getByText(generatedData.personalInfo.phoneNumber)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.billingFirstName.getByText(generatedData.personalInfo.firstName)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.billingLastName.getByText(generatedData.personalInfo.lastName)
+  ).toBeVisible()
+
+  await expect(cartPage.billingAddress1.getByText(generatedData.addressInfo.address1)).toBeVisible()
+  await expect(cartPage.billingAddress2.getByText(generatedData.addressInfo.address2)).toBeVisible()
+  await expect(cartPage.billingCity.getByText(generatedData.addressInfo.city)).toBeVisible()
+  await expect(cartPage.billingState.getByText(generatedData.addressInfo.state)).toBeVisible()
+  await expect(cartPage.billingPostCode.getByText(generatedData.addressInfo.zipCode)).toBeVisible()
+  await expect(cartPage.billingCountry.getByText(generatedData.addressInfo.country)).toBeVisible()
+
+  await expect(
+    cartPage.billingPhoneNumber.getByText(generatedData.personalInfo.phoneNumber)
+  ).toBeVisible()
+
+  await cartPage.commentTextArea.fill(randomData.paragraph)
   await cartPage.placeOrderLink.click()
-  await cartPage.nameOnCardInput.fill(randomFullName)
-  await cartPage.cardNumberInput.fill(randomCreditCardNumber)
-  await cartPage.cvcInput.fill(randomCVC)
-  await cartPage.expirationMonthInput.fill(randomExpirationMonth)
-  await cartPage.expirationYearInput.fill(randomExpirationYear)
+  await cartPage.fillOutPaymentInfo()
   await cartPage.payConfirmOrderButton.click()
 
   // TODO: Playwright says this alert is not visible
@@ -268,46 +243,6 @@ test('Download Invoice after purchase order', async ({ page }) => {
   const productCount: number = await homePage.featuredItems.count()
   const randomIndex1 = faker.number.int({ min: 0, max: productCount - 1 })
   const randomIndex2 = faker.number.int({ min: 0, max: productCount - 1 })
-  const randomFullName = faker.person.fullName()
-  const randomEmail = faker.internet.email()
-  const randomTitle = faker.helpers.arrayElement(['Mr.', 'Mrs.'])
-
-  const randomDate = faker.date.birthdate({
-    min: 1982,
-    max: 2006,
-    mode: 'year',
-  })
-
-  const randomPassword = faker.internet.password()
-  const randomDay = randomDate.getDate().toString()
-  const randomMonth = (randomDate.getMonth() + 1).toString()
-  const randomYear = randomDate.getFullYear().toString()
-  const randomFirstName = faker.person.firstName()
-  const randomLastName = faker.person.lastName()
-  const randomCompany = faker.company.name()
-  const randomAddress1 = faker.location.streetAddress()
-  const randomAddress2 = faker.location.secondaryAddress()
-
-  const randomCountry = faker.helpers.arrayElement([
-    'India',
-    'United States',
-    'Canada',
-    'Australia',
-    'Israel',
-    'New Zealand',
-    'Singapore',
-  ])
-
-  const randomState = faker.location.state()
-  const randomCity = faker.location.city()
-  const randomZipCode = faker.location.zipCode()
-  const randomPhoneNumber = faker.phone.number()
-  const randomParagraph = faker.lorem.paragraph()
-  const randomCreditCardNumber = faker.finance.creditCardNumber()
-  const randomCVC = faker.finance.creditCardCVV()
-  const futureDate = faker.date.future({ years: 10 })
-  const randomExpirationMonth = futureDate.getMonth().toString()
-  const randomExpirationYear = futureDate.getFullYear().toString()
   const continueButton = page.getByRole('link', { name: /continue/i })
 
   await homePage.featuredItemAddToCartLink.nth(randomIndex1).click()
@@ -319,59 +254,70 @@ test('Download Invoice after purchase order', async ({ page }) => {
   await cartPage.proceedToCheckout.click()
   await cartPage.registerLoginLink.click()
   await expect(signupLoginPage.newUserSignUpHeader).toBeVisible()
-  await signupLoginPage.nameInput.fill(randomFullName)
-  await signupLoginPage.signupEmailAddressInput.fill(randomEmail)
+
+  await signupLoginPage.fillOutSignUpForm(
+    randomData.personalInfo.fullName,
+    randomData.personalInfo.email
+  )
+
   await signupLoginPage.signUpButton.click()
   await expect(accountInfoPage.enterAccountInfoHeader).toBeVisible()
-  await page.getByLabel(randomTitle).click()
-  await expect(accountInfoPage.nameInput).toHaveValue(randomFullName)
-  await expect(accountInfoPage.emailInput).toHaveValue(randomEmail)
-  await accountInfoPage.passwordInput.fill(randomPassword)
-  await accountInfoPage.daySelect.selectOption(randomDay)
-  await accountInfoPage.monthSelect.selectOption(randomMonth)
-  await accountInfoPage.yearSelect.selectOption(randomYear)
-  await accountInfoPage.signUpNewsletterCheckbox.click()
-  await accountInfoPage.receiveOffersCheckbox.click()
-  await accountInfoPage.firstNameInput.fill(randomFirstName)
-  await accountInfoPage.lastNameInput.fill(randomLastName)
-  await accountInfoPage.companyInput.fill(randomCompany)
-  await accountInfoPage.address1Input.fill(randomAddress1)
-  await accountInfoPage.address2Input.fill(randomAddress2)
-  await accountInfoPage.countrySelect.selectOption(randomCountry)
-  await accountInfoPage.stateInput.fill(randomState)
-  await accountInfoPage.cityInput.fill(randomCity)
-  await accountInfoPage.zipcodeInput.fill(randomZipCode)
-  await accountInfoPage.mobileNumberInput.fill(randomPhoneNumber)
+
+  const generatedData = await accountInfoPage.fillOutAccountInfo()
+
   await accountInfoPage.createAccountButton.click()
   await expect(page.getByText('ACCOUNT CREATED!')).toBeVisible()
   await continueButton.click()
   await shopMenu.cartLink.click()
   await cartPage.proceedToCheckout.click()
-  await expect(cartPage.deliveryFirstName.getByText(randomFirstName)).toBeVisible()
-  await expect(cartPage.deliveryLastName.getByText(randomLastName)).toBeVisible()
-  await expect(cartPage.deliveryAddress1.getByText(randomAddress1)).toBeVisible()
-  await expect(cartPage.deliveryAddress2.getByText(randomAddress2)).toBeVisible()
-  await expect(cartPage.deliveryCity.getByText(randomCity)).toBeVisible()
-  await expect(cartPage.deliveryState.getByText(randomState)).toBeVisible()
-  await expect(cartPage.deliveryPostCode.getByText(randomZipCode)).toBeVisible()
-  await expect(cartPage.deliveryCountry.getByText(randomCountry)).toBeVisible()
-  await expect(cartPage.deliveryPhoneNumber.getByText(randomPhoneNumber)).toBeVisible()
-  await expect(cartPage.billingFirstName.getByText(randomFirstName)).toBeVisible()
-  await expect(cartPage.billingLastName.getByText(randomLastName)).toBeVisible()
-  await expect(cartPage.billingAddress1.getByText(randomAddress1)).toBeVisible()
-  await expect(cartPage.billingAddress2.getByText(randomAddress2)).toBeVisible()
-  await expect(cartPage.billingCity.getByText(randomCity)).toBeVisible()
-  await expect(cartPage.billingState.getByText(randomState)).toBeVisible()
-  await expect(cartPage.billingPostCode.getByText(randomZipCode)).toBeVisible()
-  await expect(cartPage.billingCountry.getByText(randomCountry)).toBeVisible()
-  await expect(cartPage.billingPhoneNumber.getByText(randomPhoneNumber)).toBeVisible()
-  await cartPage.commentTextArea.fill(randomParagraph)
+
+  await expect(
+    cartPage.deliveryFirstName.getByText(generatedData.personalInfo.firstName)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.deliveryLastName.getByText(generatedData.personalInfo.lastName)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.deliveryAddress1.getByText(generatedData.addressInfo.address1)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.deliveryAddress2.getByText(generatedData.addressInfo.address2)
+  ).toBeVisible()
+
+  await expect(cartPage.deliveryCity.getByText(generatedData.addressInfo.city)).toBeVisible()
+  await expect(cartPage.deliveryState.getByText(generatedData.addressInfo.state)).toBeVisible()
+  await expect(cartPage.deliveryPostCode.getByText(generatedData.addressInfo.zipCode)).toBeVisible()
+  await expect(cartPage.deliveryCountry.getByText(generatedData.addressInfo.country)).toBeVisible()
+
+  await expect(
+    cartPage.deliveryPhoneNumber.getByText(generatedData.personalInfo.phoneNumber)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.billingFirstName.getByText(generatedData.personalInfo.firstName)
+  ).toBeVisible()
+
+  await expect(
+    cartPage.billingLastName.getByText(generatedData.personalInfo.lastName)
+  ).toBeVisible()
+
+  await expect(cartPage.billingAddress1.getByText(generatedData.addressInfo.address1)).toBeVisible()
+  await expect(cartPage.billingAddress2.getByText(generatedData.addressInfo.address2)).toBeVisible()
+  await expect(cartPage.billingCity.getByText(generatedData.addressInfo.city)).toBeVisible()
+  await expect(cartPage.billingState.getByText(generatedData.addressInfo.state)).toBeVisible()
+  await expect(cartPage.billingPostCode.getByText(generatedData.addressInfo.zipCode)).toBeVisible()
+  await expect(cartPage.billingCountry.getByText(generatedData.addressInfo.country)).toBeVisible()
+
+  await expect(
+    cartPage.billingPhoneNumber.getByText(generatedData.personalInfo.phoneNumber)
+  ).toBeVisible()
+
+  await cartPage.commentTextArea.fill(randomData.paragraph)
   await cartPage.placeOrderLink.click()
-  await cartPage.nameOnCardInput.fill(randomFullName)
-  await cartPage.cardNumberInput.fill(randomCreditCardNumber)
-  await cartPage.cvcInput.fill(randomCVC)
-  await cartPage.expirationMonthInput.fill(randomExpirationMonth)
-  await cartPage.expirationYearInput.fill(randomExpirationYear)
+  await cartPage.fillOutPaymentInfo()
   await cartPage.payConfirmOrderButton.click()
 
   // TODO: Playwright says this alert is not visible
@@ -385,6 +331,7 @@ test('Download Invoice after purchase order', async ({ page }) => {
 
   await download.saveAs('./tests/e2e/misc/' + download.suggestedFilename())
   await continueButton.click()
+
   await shopMenu.deleteAccountLink.click()
   await expect(page.getByText('ACCOUNT DELETED!')).toBeVisible()
   await continueButton.click()
