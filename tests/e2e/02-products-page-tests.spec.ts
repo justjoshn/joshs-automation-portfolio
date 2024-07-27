@@ -1,17 +1,18 @@
 import { test, expect } from '@playwright/test'
-import { HomePage } from './pages/homePage'
-import { ShopMenu } from './pages/shopMenu'
-import { ProductsPage } from './pages/productsPage'
-import { ProductDetailsPage } from './pages/productDetailsPage'
-import { CartPage } from './pages/cartPage'
+import { HomePage } from '../../src/pages/homePage'
+import { ShopMenu } from '../../src/components/shopMenu'
+import { ProductsPage } from '../../src/pages/productsPage'
+import { ProductDetailsPage } from '../../src/pages/productDetailsPage'
+import { CartPage } from '../../src/pages/cartPage'
 import { faker } from '@faker-js/faker'
-import { LeftSidebar } from './pages/leftSidebar'
-import { extractCategoryName } from './utils/helpers'
-import { SignupLoginPage } from './pages/signupLoginPage'
-import { generateRandomData, useStaticData } from './utils/helpers'
+import { LeftSidebar } from '../../src/components/leftSidebar'
+import { extractCategoryName } from '../../src/utils/helpers'
+import { SignupLoginPage } from '../../src/pages/signupLoginPage'
+import { userInfoFactory, textContentFactory } from '../../src/factories/factories'
+import { realUserData } from '../../src/testData/realData'
 
-const randomData = generateRandomData()
-const staticData = useStaticData()
+const randomUserData = userInfoFactory()
+const randomTextContent = textContentFactory()
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -213,12 +214,7 @@ test('Search Products and Verify Cart After Login', async ({ page }) => {
 
   await shopMenu.signupLoginLink.click()
   await expect(signupLoginPage.logiinToYourAccountHeader).toBeVisible()
-
-  await signupLoginPage.fillOutLoginForm(
-    staticData.personalInfo.email,
-    staticData.personalInfo.password
-  )
-
+  await signupLoginPage.fillOutLoginForm(realUserData.email, realUserData.password)
   await signupLoginPage.loginButton.click()
   await shopMenu.cartLink.click()
   await cartPage.cartProducts.first().waitFor()
@@ -245,9 +241,9 @@ test('Add review on product', async ({ page }) => {
 
   await randomViewProductLink.click()
   await expect(productDetailsPage.writeYourReviewText).toBeVisible()
-  await productDetailsPage.yourNameInput.fill(randomData.personalInfo.fullName)
-  await productDetailsPage.emailAddressInput.fill(randomData.personalInfo.email)
-  await productDetailsPage.addReviewHereTextArea.fill(randomData.paragraphs)
+  await productDetailsPage.yourNameInput.fill(randomUserData.fullName)
+  await productDetailsPage.emailAddressInput.fill(randomUserData.email)
+  await productDetailsPage.addReviewHereTextArea.fill(randomTextContent.paragraphs)
   await productDetailsPage.submitButton.click()
   await expect(page.getByText('Thank you for your review.')).toBeVisible()
 })

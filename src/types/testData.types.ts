@@ -1,23 +1,21 @@
-export interface PersonalInfo {
+export interface UserInfo {
   fullName: string
-  firstName: string
-  lastName: string
   email: string
-  title: string
   password: string
-  phoneNumber: string
+  title: string
   birthDay: string
   birthMonth: string
   birthYear: string
-}
-
-export interface AddressInfo {
-  country: string
-  state: string
-  city: string
+  firstName: string
+  lastName: string
+  company: string
   address1: string
   address2: string
-  zipCode: string
+  country: string
+  zipcode: string
+  state: string
+  city: string
+  phoneNumber: string
 }
 
 export interface FinancialInfo {

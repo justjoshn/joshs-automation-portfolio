@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test'
-import { HomePage } from './pages/homePage'
-import { ShopMenu } from './pages/shopMenu'
-import { SubscriptionWidget } from './pages/subscriptionWidget'
-import { generateRandomData } from './utils/helpers'
+import { HomePage } from '../../src/pages/homePage'
+import { ShopMenu } from '../../src/components/shopMenu'
+import { SubscriptionWidget } from '../../src/components/subscriptionWidget'
+import { userInfoFactory } from '../../src/factories/factories'
 
-const randomData = generateRandomData()
+const randomUserData = userInfoFactory()
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -20,7 +20,7 @@ test('Verify Subscription in cart page', async ({ page }) => {
 
   await subscriptionWidget.footerWidget.scrollIntoViewIfNeeded()
   await expect(subscriptionWidget.subscriptionHeader).toBeVisible()
-  await subscriptionWidget.emailAddressInput.fill(randomData.personalInfo.email)
+  await subscriptionWidget.emailAddressInput.fill(randomUserData.email)
   await subscriptionWidget.submitButton.click()
   await expect(subscriptionWidget.successSubscribe).not.toHaveClass('hide')
   await expect(subscriptionWidget.successfulAlert).toBeVisible()

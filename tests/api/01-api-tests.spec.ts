@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test'
-import { Brand, Product } from './types/product.types'
+import { Brand, Product } from '../../src/types/product.types'
 import { faker } from '@faker-js/faker'
-import { generateRandomData, useStaticData } from '../e2e/utils/helpers'
+import { userInfoFactory } from '../../src/factories/factories'
+import { realUserData } from '../../src/testData/realData'
 
-const randomData = generateRandomData()
-const randomData2 = generateRandomData()
-const staticData = useStaticData()
+const randomUserData = userInfoFactory()
+const randomUpdateUserData = userInfoFactory()
 
 const productsList = '/api/productsList'
 const brandsList = '/api/brandsList'
@@ -132,8 +132,8 @@ test('POST To Search Product without search_product parameter', async ({ request
 test('POST To Verify Login with valid details', async ({ request }) => {
   const response = await request.post(verifyLogin, {
     form: {
-      email: staticData.personalInfo.email,
-      password: staticData.personalInfo.password,
+      email: realUserData.email,
+      password: realUserData.password,
     },
   })
 
@@ -146,7 +146,7 @@ test('POST To Verify Login with valid details', async ({ request }) => {
 test('POST To Verify Login without email parameter', async ({ request }) => {
   const response = await request.post(verifyLogin, {
     form: {
-      password: randomData.personalInfo.password,
+      password: randomUserData.password,
     },
   })
 
@@ -162,8 +162,8 @@ test('POST To Verify Login without email parameter', async ({ request }) => {
 test('DELETE To Verify Login', async ({ request }) => {
   const response = await request.delete(verifyLogin, {
     form: {
-      email: staticData.personalInfo.email,
-      password: staticData.personalInfo.password,
+      email: realUserData.email,
+      password: realUserData.password,
     },
   })
 
@@ -176,8 +176,8 @@ test('DELETE To Verify Login', async ({ request }) => {
 test('POST To Verify Login with invalid details', async ({ request }) => {
   const response = await request.post(verifyLogin, {
     form: {
-      email: randomData.personalInfo.email,
-      password: randomData.personalInfo.password,
+      email: randomUserData.email,
+      password: randomUserData.password,
     },
   })
 
@@ -190,23 +190,23 @@ test('POST To Verify Login with invalid details', async ({ request }) => {
 test('POST To Create/Register User Account', async ({ request }) => {
   const createUserResponse = await request.post(createAccount, {
     form: {
-      name: randomData.personalInfo.fullName,
-      email: randomData.personalInfo.email,
-      password: randomData.personalInfo.password,
-      title: randomData.personalInfo.title,
-      birth_date: randomData.personalInfo.birthDay,
-      birth_month: randomData.personalInfo.birthMonth,
-      birth_year: randomData.personalInfo.birthYear,
-      firstname: randomData.personalInfo.firstName,
-      lastname: randomData.personalInfo.lastName,
-      company: randomData.company,
-      address1: randomData.addressInfo.address1,
-      address2: randomData.addressInfo.address2,
-      country: randomData.addressInfo.country,
-      zipcode: randomData.addressInfo.zipCode,
-      state: randomData.addressInfo.state,
-      city: randomData.addressInfo.city,
-      mobile_number: randomData.personalInfo.phoneNumber,
+      name: randomUserData.fullName,
+      email: randomUserData.email,
+      password: randomUserData.password,
+      title: randomUserData.title,
+      birth_date: randomUserData.birthDay,
+      birth_month: randomUserData.birthMonth,
+      birth_year: randomUserData.birthYear,
+      firstname: randomUserData.firstName,
+      lastname: randomUserData.lastName,
+      company: randomUserData.company,
+      address1: randomUserData.address1,
+      address2: randomUserData.address2,
+      country: randomUserData.country,
+      zipcode: randomUserData.zipcode,
+      state: randomUserData.state,
+      city: randomUserData.city,
+      mobile_number: randomUserData.phoneNumber,
     },
   })
 
@@ -217,28 +217,28 @@ test('POST To Create/Register User Account', async ({ request }) => {
 })
 
 test('DELETE METHOD To Delete User Account', async ({ request }) => {
-  const randomEmail = randomData.personalInfo.email
-  const randomPassword = randomData.personalInfo.password
+  const randomEmail = randomUserData.email
+  const randomPassword = randomUserData.password
 
   const createUserResponse = await request.post(createAccount, {
     form: {
-      name: randomData.personalInfo.fullName,
+      name: randomUserData.fullName,
       email: randomEmail,
       password: randomPassword,
-      title: randomData.personalInfo.title,
-      birth_date: randomData.personalInfo.birthDay,
-      birth_month: randomData.personalInfo.birthMonth,
-      birth_year: randomData.personalInfo.birthYear,
-      firstname: randomData.personalInfo.firstName,
-      lastname: randomData.personalInfo.lastName,
-      company: randomData.company,
-      address1: randomData.addressInfo.address1,
-      address2: randomData.addressInfo.address2,
-      country: randomData.addressInfo.country,
-      zipcode: randomData.addressInfo.zipCode,
-      state: randomData.addressInfo.state,
-      city: randomData.addressInfo.city,
-      mobile_number: randomData.personalInfo.phoneNumber,
+      title: randomUserData.title,
+      birth_date: randomUserData.birthDay,
+      birth_month: randomUserData.birthMonth,
+      birth_year: randomUserData.birthYear,
+      firstname: randomUserData.firstName,
+      lastname: randomUserData.lastName,
+      company: randomUserData.company,
+      address1: randomUserData.address1,
+      address2: randomUserData.address2,
+      country: randomUserData.country,
+      zipcode: randomUserData.zipcode,
+      state: randomUserData.state,
+      city: randomUserData.city,
+      mobile_number: randomUserData.phoneNumber,
     },
   })
 
@@ -260,23 +260,23 @@ test('DELETE METHOD To Delete User Account', async ({ request }) => {
 test('PUT METHOD To Update User Account', async ({ request }) => {
   const createUserResponse = await request.post(createAccount, {
     form: {
-      name: randomData.personalInfo.fullName,
-      email: randomData.personalInfo.email,
-      password: randomData.personalInfo.password,
-      title: randomData.personalInfo.title,
-      birth_date: randomData.personalInfo.birthDay,
-      birth_month: randomData.personalInfo.birthMonth,
-      birth_year: randomData.personalInfo.birthYear,
-      firstname: randomData.personalInfo.firstName,
-      lastname: randomData.personalInfo.lastName,
-      company: randomData.company,
-      address1: randomData.addressInfo.address1,
-      address2: randomData.addressInfo.address2,
-      country: randomData.addressInfo.country,
-      zipcode: randomData.addressInfo.zipCode,
-      state: randomData.addressInfo.state,
-      city: randomData.addressInfo.city,
-      mobile_number: randomData.personalInfo.phoneNumber,
+      name: randomUserData.fullName,
+      email: randomUserData.email,
+      password: randomUserData.password,
+      title: randomUserData.title,
+      birth_date: randomUserData.birthDay,
+      birth_month: randomUserData.birthMonth,
+      birth_year: randomUserData.birthYear,
+      firstname: randomUserData.firstName,
+      lastname: randomUserData.lastName,
+      company: randomUserData.company,
+      address1: randomUserData.address1,
+      address2: randomUserData.address2,
+      country: randomUserData.country,
+      zipcode: randomUserData.zipcode,
+      state: randomUserData.state,
+      city: randomUserData.city,
+      mobile_number: randomUserData.phoneNumber,
     },
   })
 
@@ -284,23 +284,23 @@ test('PUT METHOD To Update User Account', async ({ request }) => {
 
   const updateUserResponse = await request.put(updateAccount, {
     form: {
-      name: randomData2.personalInfo.fullName,
-      email: randomData.personalInfo.email,
-      password: randomData.personalInfo.password,
-      title: randomData2.personalInfo.title,
-      birth_date: randomData2.personalInfo.birthDay,
-      birth_month: randomData2.personalInfo.birthMonth,
-      birth_year: randomData2.personalInfo.birthYear,
-      firstname: randomData2.personalInfo.firstName,
-      lastname: randomData2.personalInfo.lastName,
-      company: randomData2.company,
-      address1: randomData2.addressInfo.address1,
-      address2: randomData2.addressInfo.address2,
-      country: randomData2.addressInfo.country,
-      zipcode: randomData2.addressInfo.zipCode,
-      state: randomData2.addressInfo.state,
-      city: randomData2.addressInfo.city,
-      mobile_number: randomData2.personalInfo.phoneNumber,
+      name: randomUpdateUserData.fullName,
+      email: randomUserData.email,
+      password: randomUserData.password,
+      title: randomUpdateUserData.title,
+      birth_date: randomUpdateUserData.birthDay,
+      birth_month: randomUpdateUserData.birthMonth,
+      birth_year: randomUpdateUserData.birthYear,
+      firstname: randomUpdateUserData.firstName,
+      lastname: randomUpdateUserData.lastName,
+      company: randomUpdateUserData.company,
+      address1: randomUpdateUserData.address1,
+      address2: randomUpdateUserData.address2,
+      country: randomUpdateUserData.country,
+      zipcode: randomUpdateUserData.zipcode,
+      state: randomUpdateUserData.state,
+      city: randomUpdateUserData.city,
+      mobile_number: randomUpdateUserData.phoneNumber,
     },
   })
 
@@ -313,7 +313,7 @@ test('PUT METHOD To Update User Account', async ({ request }) => {
 test('GET user account detail by email', async ({ request }) => {
   const getUserDetailResponse = await request.get(getUserDetailByEmail, {
     params: {
-      email: staticData.personalInfo.email,
+      email: realUserData.email,
     },
   })
 

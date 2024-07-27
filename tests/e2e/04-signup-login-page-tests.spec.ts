@@ -1,14 +1,15 @@
 import { test, expect } from '@playwright/test'
-import { HomePage } from './pages/homePage'
-import { ShopMenu } from './pages/shopMenu'
-import { SignupLoginPage } from './pages/signupLoginPage'
-import { AccountInfoPage } from './pages/accountInfoPage'
-import { CartPage } from './pages/cartPage'
+import { HomePage } from '../../src/pages/homePage'
+import { ShopMenu } from '../../src/components/shopMenu'
+import { SignupLoginPage } from '../../src/pages/signupLoginPage'
+import { AccountInfoPage } from '../../src/pages/accountInfoPage'
+import { CartPage } from '../../src/pages/cartPage'
 import { faker } from '@faker-js/faker'
-import { generateRandomData, useStaticData } from './utils/helpers'
+import { realUserData } from '../../src/testData/realData'
+import { userInfoFactory, textContentFactory } from '../../src/factories/factories'
 
-const randomData = generateRandomData()
-const staticData = useStaticData()
+const randomUserData = userInfoFactory()
+const randomTextContent = textContentFactory()
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -26,12 +27,7 @@ test('Register User and Delete Account', async ({ page }) => {
   const continueButton = page.getByRole('link', { name: /continue/i })
 
   await expect(signUpLoginPage.newUserSignUpHeader).toBeVisible()
-
-  await signUpLoginPage.fillOutSignUpForm(
-    randomData.personalInfo.fullName,
-    randomData.personalInfo.email
-  )
-
+  await signUpLoginPage.fillOutSignUpForm(randomUserData.fullName, randomUserData.email)
   await signUpLoginPage.signUpButton.click()
   await expect(accountInfoPage.enterAccountInfoHeader).toBeVisible()
   await accountInfoPage.fillOutAccountInfo()
@@ -52,14 +48,9 @@ test('Login User with correct email and password and Logout', async ({ page }) =
   const signUpLoginPage = new SignupLoginPage(page)
 
   await expect(signUpLoginPage.logiinToYourAccountHeader).toBeVisible()
-
-  await signUpLoginPage.fillOutLoginForm(
-    staticData.personalInfo.email,
-    staticData.personalInfo.password
-  )
-
+  await signUpLoginPage.fillOutLoginForm(realUserData.email, realUserData.password)
   await signUpLoginPage.loginButton.click()
-  await expect(page.getByText(`Logged in as ${staticData.personalInfo.fullName}`)).toBeVisible()
+  await expect(page.getByText(`Logged in as ${realUserData.fullName}`)).toBeVisible()
   await shopMenu.logoutLink.click()
   await expect(signUpLoginPage.loginForm).toBeVisible()
 })
@@ -68,12 +59,7 @@ test('Login User with incorrect email and password', async ({ page }) => {
   const signUpLoginPage = new SignupLoginPage(page)
 
   await expect(signUpLoginPage.logiinToYourAccountHeader).toBeVisible()
-
-  await signUpLoginPage.fillOutLoginForm(
-    randomData.personalInfo.email,
-    randomData.personalInfo.password
-  )
-
+  await signUpLoginPage.fillOutLoginForm(randomUserData.email, randomUserData.password)
   await signUpLoginPage.loginButton.click()
   await expect(page.getByText('Your email or password is incorrect!')).toBeVisible()
 })
@@ -82,12 +68,7 @@ test('Register User with existing email', async ({ page }) => {
   const signUpLoginPage = new SignupLoginPage(page)
 
   await expect(signUpLoginPage.newUserSignUpHeader).toBeVisible()
-
-  await signUpLoginPage.fillOutSignUpForm(
-    staticData.personalInfo.fullName,
-    staticData.personalInfo.email
-  )
-
+  await signUpLoginPage.fillOutSignUpForm(realUserData.fullName, realUserData.email)
   await signUpLoginPage.signUpButton.click()
   await expect(page.getByText('Email Address already exist!')).toBeVisible()
 })
@@ -101,12 +82,7 @@ test('Place Order: Register before Checkout', async ({ page }) => {
   const continueButton = page.getByRole('link', { name: /continue/i })
 
   await expect(signUpLoginPage.newUserSignUpHeader).toBeVisible()
-
-  await signUpLoginPage.fillOutSignUpForm(
-    randomData.personalInfo.fullName,
-    randomData.personalInfo.email
-  )
-
+  await signUpLoginPage.fillOutSignUpForm(randomUserData.fullName, randomUserData.email)
   await signUpLoginPage.signUpButton.click()
   await expect(accountInfoPage.enterAccountInfoHeader).toBeVisible()
 
@@ -132,52 +108,26 @@ test('Place Order: Register before Checkout', async ({ page }) => {
   await shopMenu.cartLink.click()
   await expect(cartPage.cartInfoTable).toBeVisible()
   await cartPage.proceedToCheckout.click()
+  await expect(cartPage.deliveryFirstName.getByText(generatedData.firstName)).toBeVisible()
+  await expect(cartPage.deliveryLastName.getByText(generatedData.lastName)).toBeVisible()
+  await expect(cartPage.deliveryAddress1.getByText(generatedData.address1)).toBeVisible()
+  await expect(cartPage.deliveryAddress2.getByText(generatedData.address2)).toBeVisible()
+  await expect(cartPage.deliveryCity.getByText(generatedData.city)).toBeVisible()
+  await expect(cartPage.deliveryState.getByText(generatedData.state)).toBeVisible()
+  await expect(cartPage.deliveryPostCode.getByText(generatedData.zipcode)).toBeVisible()
+  await expect(cartPage.deliveryCountry.getByText(generatedData.country)).toBeVisible()
+  await expect(cartPage.deliveryPhoneNumber.getByText(generatedData.phoneNumber)).toBeVisible()
+  await expect(cartPage.billingFirstName.getByText(generatedData.firstName)).toBeVisible()
+  await expect(cartPage.billingLastName.getByText(generatedData.lastName)).toBeVisible()
+  await expect(cartPage.billingAddress1.getByText(generatedData.address1)).toBeVisible()
+  await expect(cartPage.billingAddress2.getByText(generatedData.address2)).toBeVisible()
+  await expect(cartPage.billingCity.getByText(generatedData.city)).toBeVisible()
+  await expect(cartPage.billingState.getByText(generatedData.state)).toBeVisible()
+  await expect(cartPage.billingPostCode.getByText(generatedData.zipcode)).toBeVisible()
+  await expect(cartPage.billingCountry.getByText(generatedData.country)).toBeVisible()
+  await expect(cartPage.billingPhoneNumber.getByText(generatedData.phoneNumber)).toBeVisible()
 
-  await expect(
-    cartPage.deliveryFirstName.getByText(generatedData.personalInfo.firstName)
-  ).toBeVisible()
-
-  await expect(
-    cartPage.deliveryLastName.getByText(generatedData.personalInfo.lastName)
-  ).toBeVisible()
-
-  await expect(
-    cartPage.deliveryAddress1.getByText(generatedData.addressInfo.address1)
-  ).toBeVisible()
-
-  await expect(
-    cartPage.deliveryAddress2.getByText(generatedData.addressInfo.address2)
-  ).toBeVisible()
-
-  await expect(cartPage.deliveryCity.getByText(generatedData.addressInfo.city)).toBeVisible()
-  await expect(cartPage.deliveryState.getByText(generatedData.addressInfo.state)).toBeVisible()
-  await expect(cartPage.deliveryPostCode.getByText(generatedData.addressInfo.zipCode)).toBeVisible()
-  await expect(cartPage.deliveryCountry.getByText(generatedData.addressInfo.country)).toBeVisible()
-
-  await expect(
-    cartPage.deliveryPhoneNumber.getByText(generatedData.personalInfo.phoneNumber)
-  ).toBeVisible()
-
-  await expect(
-    cartPage.billingFirstName.getByText(generatedData.personalInfo.firstName)
-  ).toBeVisible()
-
-  await expect(
-    cartPage.billingLastName.getByText(generatedData.personalInfo.lastName)
-  ).toBeVisible()
-
-  await expect(cartPage.billingAddress1.getByText(generatedData.addressInfo.address1)).toBeVisible()
-  await expect(cartPage.billingAddress2.getByText(generatedData.addressInfo.address2)).toBeVisible()
-  await expect(cartPage.billingCity.getByText(generatedData.addressInfo.city)).toBeVisible()
-  await expect(cartPage.billingState.getByText(generatedData.addressInfo.state)).toBeVisible()
-  await expect(cartPage.billingPostCode.getByText(generatedData.addressInfo.zipCode)).toBeVisible()
-  await expect(cartPage.billingCountry.getByText(generatedData.addressInfo.country)).toBeVisible()
-
-  await expect(
-    cartPage.billingPhoneNumber.getByText(generatedData.personalInfo.phoneNumber)
-  ).toBeVisible()
-
-  await cartPage.commentTextArea.fill(randomData.paragraph)
+  await cartPage.commentTextArea.fill(randomTextContent.paragraph)
   await cartPage.placeOrderLink.click()
   await cartPage.fillOutPaymentInfo()
   await cartPage.payConfirmOrderButton.click()
@@ -197,14 +147,9 @@ test('Place Order: Login before Checkout', async ({ page }) => {
   const signUpLoginPage = new SignupLoginPage(page)
 
   await expect(signUpLoginPage.logiinToYourAccountHeader).toBeVisible()
-
-  await signUpLoginPage.fillOutLoginForm(
-    staticData.personalInfo.email,
-    staticData.personalInfo.password
-  )
-
+  await signUpLoginPage.fillOutLoginForm(realUserData.email, realUserData.password)
   await signUpLoginPage.loginButton.click()
-  await expect(page.getByText(`Logged in as ${staticData.personalInfo.fullName}`)).toBeVisible()
+  await expect(page.getByText(`Logged in as ${realUserData.fullName}`)).toBeVisible()
 
   const allAddToCartLinks = await homePage.featuredItemAddToCartLink.all()
   const firstRandomAddToCartLink = faker.helpers.arrayElement(allAddToCartLinks)
@@ -220,37 +165,25 @@ test('Place Order: Login before Checkout', async ({ page }) => {
   await shopMenu.cartLink.click()
   await expect(cartPage.cartInfoTable).toBeVisible()
   await cartPage.proceedToCheckout.click()
-
-  await expect(
-    cartPage.deliveryFirstName.getByText(staticData.personalInfo.firstName)
-  ).toBeVisible()
-
-  await expect(cartPage.deliveryLastName.getByText(staticData.personalInfo.lastName)).toBeVisible()
-  await expect(cartPage.deliveryAddress1.getByText(staticData.addressInfo.address1)).toBeVisible()
-  await expect(cartPage.deliveryAddress2.getByText(staticData.addressInfo.address2)).toBeVisible()
-  await expect(cartPage.deliveryCity.getByText(staticData.addressInfo.city)).toBeVisible()
-  await expect(cartPage.deliveryState.getByText(staticData.addressInfo.state)).toBeVisible()
-  await expect(cartPage.deliveryPostCode.getByText(staticData.addressInfo.zipCode)).toBeVisible()
-  await expect(cartPage.deliveryCountry.getByText(staticData.addressInfo.country)).toBeVisible()
-
-  await expect(
-    cartPage.deliveryPhoneNumber.getByText(staticData.personalInfo.mobileNumber)
-  ).toBeVisible()
-
-  await expect(cartPage.billingFirstName.getByText(staticData.personalInfo.firstName)).toBeVisible()
-  await expect(cartPage.billingLastName.getByText(staticData.personalInfo.lastName)).toBeVisible()
-  await expect(cartPage.billingAddress1.getByText(staticData.addressInfo.address1)).toBeVisible()
-  await expect(cartPage.billingAddress2.getByText(staticData.addressInfo.address2)).toBeVisible()
-  await expect(cartPage.billingCity.getByText(staticData.addressInfo.city)).toBeVisible()
-  await expect(cartPage.billingState.getByText(staticData.addressInfo.state)).toBeVisible()
-  await expect(cartPage.billingPostCode.getByText(staticData.addressInfo.zipCode)).toBeVisible()
-  await expect(cartPage.billingCountry.getByText(staticData.addressInfo.country)).toBeVisible()
-
-  await expect(
-    cartPage.billingPhoneNumber.getByText(staticData.personalInfo.mobileNumber)
-  ).toBeVisible()
-
-  await cartPage.commentTextArea.fill(randomData.paragraph)
+  await expect(cartPage.deliveryFirstName.getByText(realUserData.firstName)).toBeVisible()
+  await expect(cartPage.deliveryLastName.getByText(realUserData.lastName)).toBeVisible()
+  await expect(cartPage.deliveryAddress1.getByText(realUserData.address1)).toBeVisible()
+  await expect(cartPage.deliveryAddress2.getByText(realUserData.address2)).toBeVisible()
+  await expect(cartPage.deliveryCity.getByText(realUserData.city)).toBeVisible()
+  await expect(cartPage.deliveryState.getByText(realUserData.state)).toBeVisible()
+  await expect(cartPage.deliveryPostCode.getByText(realUserData.zipCode)).toBeVisible()
+  await expect(cartPage.deliveryCountry.getByText(realUserData.country)).toBeVisible()
+  await expect(cartPage.deliveryPhoneNumber.getByText(realUserData.mobileNumber)).toBeVisible()
+  await expect(cartPage.billingFirstName.getByText(realUserData.firstName)).toBeVisible()
+  await expect(cartPage.billingLastName.getByText(realUserData.lastName)).toBeVisible()
+  await expect(cartPage.billingAddress1.getByText(realUserData.address1)).toBeVisible()
+  await expect(cartPage.billingAddress2.getByText(realUserData.address2)).toBeVisible()
+  await expect(cartPage.billingCity.getByText(realUserData.city)).toBeVisible()
+  await expect(cartPage.billingState.getByText(realUserData.state)).toBeVisible()
+  await expect(cartPage.billingPostCode.getByText(realUserData.zipCode)).toBeVisible()
+  await expect(cartPage.billingCountry.getByText(realUserData.country)).toBeVisible()
+  await expect(cartPage.billingPhoneNumber.getByText(realUserData.mobileNumber)).toBeVisible()
+  await cartPage.commentTextArea.fill(randomTextContent.paragraph)
   await cartPage.placeOrderLink.click()
   await cartPage.fillOutPaymentInfo()
   await cartPage.payConfirmOrderButton.click()

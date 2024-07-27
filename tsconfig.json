@@ -15,6 +15,6 @@
     "paths": { "*": ["node_modules/*"] },
     "types": ["node", "playwright", "@playwright/test"]
   },
-  "include": ["tests/**/*.ts", "playwright.config.ts"],
+  "include": ["tests/**/*.ts", "playwright.config.ts", "src/**/*.ts"],
   "exclude": ["node_modules"]
 }

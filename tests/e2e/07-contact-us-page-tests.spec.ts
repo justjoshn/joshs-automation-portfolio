@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test'
-import { HomePage } from './pages/homePage'
-import { ContactUsPage } from './pages/contactUsPage'
-import { ShopMenu } from './pages/shopMenu'
+import { HomePage } from '../../src/pages/homePage'
+import { ContactUsPage } from '../../src/pages/contactUsPage'
+import { ShopMenu } from '../../src/components/shopMenu'
+import { userInfoFactory, textContentFactory } from '../../src/factories/factories'
 
-import { generateRandomData } from './utils/helpers'
-
-const randomData = generateRandomData()
+const randomUserData = userInfoFactory()
+const randomTextContent = textContentFactory()
 
 test.beforeEach(async ({ page }) => {
   const homePage = new HomePage(page)
@@ -24,10 +24,10 @@ test.fixme('Contact Us Form', async ({ page }) => {
 
   await shopMenu.contactUsLink.click()
   await expect(page.getByText('GET IN TOUCH')).toBeVisible()
-  await contactUsPage.nameInput.fill(randomData.personalInfo.fullName)
-  await contactUsPage.emailInput.fill(randomData.personalInfo.email)
-  await contactUsPage.subjectInput.fill(randomData.words)
-  await contactUsPage.textArea.fill(randomData.paragraph)
+  await contactUsPage.nameInput.fill(randomUserData.fullName)
+  await contactUsPage.emailInput.fill(randomUserData.email)
+  await contactUsPage.subjectInput.fill(randomTextContent.words)
+  await contactUsPage.textArea.fill(randomTextContent.paragraph)
   await contactUsPage.uploadFile()
   await contactUsPage.submitButton.click()
 

@@ -1,5 +1,5 @@
 import { type Locator, type Page } from '@playwright/test'
-import { generateRandomData } from '../utils/helpers'
+import { userInfoFactory, creditCardInfoFactory } from '../factories/factories'
 
 export class CartPage {
   readonly page: Page
@@ -117,14 +117,13 @@ export class CartPage {
   }
 
   async fillOutPaymentInfo() {
-    const randomData = generateRandomData()
+    const randomUserData = userInfoFactory()
+    const randomCreditCardData = creditCardInfoFactory()
 
-    await this.nameOnCardInput.fill(randomData.personalInfo.fullName)
-    await this.cardNumberInput.fill(randomData.financialInfo.creditCardNumber)
-    await this.cvcInput.fill(randomData.financialInfo.cvcNumber)
-    await this.expirationMonthInput.fill(randomData.financialInfo.expirationMonth)
-    await this.expirationYearInput.fill(randomData.financialInfo.expirationYear)
-
-    return randomData
+    await this.nameOnCardInput.fill(randomUserData.fullName)
+    await this.cardNumberInput.fill(randomCreditCardData.creditCardNumber)
+    await this.cvcInput.fill(randomCreditCardData.cvcNumber)
+    await this.expirationMonthInput.fill(randomCreditCardData.expirationMonth)
+    await this.expirationYearInput.fill(randomCreditCardData.expirationYear)
   }
 }

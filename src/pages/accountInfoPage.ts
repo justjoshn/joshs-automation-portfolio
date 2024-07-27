@@ -1,5 +1,5 @@
 import { type Locator, type Page } from '@playwright/test'
-import { generateRandomData } from '../utils/helpers'
+import { userInfoFactory } from '../factories/factories'
 
 export class AccountInfoPage {
   readonly page: Page
@@ -57,26 +57,26 @@ export class AccountInfoPage {
   }
 
   async fillOutAccountInfo() {
-    const randomData = generateRandomData()
+    const randomUserData = userInfoFactory()
 
-    await this.page.getByLabel(randomData.personalInfo.title).click()
-    await this.passwordInput.fill(randomData.personalInfo.password)
-    await this.daySelect.selectOption(randomData.personalInfo.birthDay)
-    await this.monthSelect.selectOption(randomData.personalInfo.birthMonth)
-    await this.yearSelect.selectOption(randomData.personalInfo.birthYear)
+    await this.page.getByLabel(randomUserData.title).click()
+    await this.passwordInput.fill(randomUserData.password)
+    await this.daySelect.selectOption(randomUserData.birthDay)
+    await this.monthSelect.selectOption(randomUserData.birthMonth)
+    await this.yearSelect.selectOption(randomUserData.birthYear)
     await this.signUpNewsletterCheckbox.click()
     await this.receiveOffersCheckbox.click()
-    await this.firstNameInput.fill(randomData.personalInfo.firstName)
-    await this.lastNameInput.fill(randomData.personalInfo.lastName)
-    await this.companyInput.fill(randomData.company)
-    await this.address1Input.fill(randomData.addressInfo.address1)
-    await this.address2Input.fill(randomData.addressInfo.address2)
-    await this.countrySelect.selectOption(randomData.addressInfo.country)
-    await this.stateInput.fill(randomData.addressInfo.state)
-    await this.cityInput.fill(randomData.addressInfo.city)
-    await this.zipcodeInput.fill(randomData.addressInfo.zipCode)
-    await this.mobileNumberInput.fill(randomData.personalInfo.phoneNumber)
+    await this.firstNameInput.fill(randomUserData.firstName)
+    await this.lastNameInput.fill(randomUserData.lastName)
+    await this.companyInput.fill(randomUserData.company)
+    await this.address1Input.fill(randomUserData.address1)
+    await this.address2Input.fill(randomUserData.address2)
+    await this.countrySelect.selectOption(randomUserData.country)
+    await this.stateInput.fill(randomUserData.state)
+    await this.cityInput.fill(randomUserData.city)
+    await this.zipcodeInput.fill(randomUserData.zipcode)
+    await this.mobileNumberInput.fill(randomUserData.phoneNumber)
 
-    return randomData
+    return randomUserData
   }
 }
