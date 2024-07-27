@@ -1,5 +1,6 @@
 import { type Locator, type Page } from '@playwright/test'
-import { userInfoFactory, creditCardInfoFactory } from '../factories/factories'
+import { userInfoFactory } from '../factories/userInfo'
+import { creditCardInfoFactory } from '../factories/creditCardInfo'
 
 export class CartPage {
   readonly page: Page

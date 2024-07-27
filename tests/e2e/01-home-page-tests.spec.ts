@@ -8,7 +8,8 @@ import { ShopMenu } from '../../src/components/shopMenu'
 import { SignupLoginPage } from '../../src/pages/signupLoginPage'
 import { AccountInfoPage } from '../../src/pages/accountInfoPage'
 import { LeftSidebar } from '../../src/components/leftSidebar'
-import { userInfoFactory, textContentFactory } from '../../src/factories/factories'
+import { userInfoFactory } from '../../src/factories/userInfo'
+import { textContentFactory } from '../../src/factories/textContent'
 
 const randomUserData = userInfoFactory()
 const randomTextContent = textContentFactory()

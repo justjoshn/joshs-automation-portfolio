@@ -1,5 +1,5 @@
 import { type Locator, type Page } from '@playwright/test'
-import { userInfoFactory } from '../factories/factories'
+import { userInfoFactory } from '../factories/userInfo'
 
 export class AccountInfoPage {
   readonly page: Page

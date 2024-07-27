@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { HomePage } from '../../src/pages/homePage'
 import { ShopMenu } from '../../src/components/shopMenu'
 import { SubscriptionWidget } from '../../src/components/subscriptionWidget'
-import { userInfoFactory } from '../../src/factories/factories'
+import { userInfoFactory } from '../../src/factories/userInfo'
 
 const randomUserData = userInfoFactory()
 

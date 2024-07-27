@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test'
 import { Brand, Product } from '../../src/types/product.types'
 import { faker } from '@faker-js/faker'
-import { userInfoFactory } from '../../src/factories/factories'
+import { userInfoFactories } from '../../src/factories/userInfo'
 import { realUserData } from '../../src/testData/realData'
 
-const randomUserData = userInfoFactory()
-const randomUpdateUserData = userInfoFactory()
+const randomDataSets = userInfoFactories(2)
+const randomUserData = randomDataSets[0]
+const randomUpdateUserData = randomDataSets[1]
 
 const productsList = '/api/productsList'
 const brandsList = '/api/brandsList'

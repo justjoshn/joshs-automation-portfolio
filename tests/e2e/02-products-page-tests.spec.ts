@@ -8,7 +8,8 @@ import { faker } from '@faker-js/faker'
 import { LeftSidebar } from '../../src/components/leftSidebar'
 import { extractCategoryName } from '../../src/utils/helpers'
 import { SignupLoginPage } from '../../src/pages/signupLoginPage'
-import { userInfoFactory, textContentFactory } from '../../src/factories/factories'
+import { userInfoFactory } from '../../src/factories/userInfo'
+import { textContentFactory } from '../../src/factories/textContent'
 import { realUserData } from '../../src/testData/realData'
 
 const randomUserData = userInfoFactory()

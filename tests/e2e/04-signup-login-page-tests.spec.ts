@@ -6,7 +6,8 @@ import { AccountInfoPage } from '../../src/pages/accountInfoPage'
 import { CartPage } from '../../src/pages/cartPage'
 import { faker } from '@faker-js/faker'
 import { realUserData } from '../../src/testData/realData'
-import { userInfoFactory, textContentFactory } from '../../src/factories/factories'
+import { userInfoFactory } from '../../src/factories/userInfo'
+import { textContentFactory } from '../../src/factories/textContent'
 
 const randomUserData = userInfoFactory()
 const randomTextContent = textContentFactory()
